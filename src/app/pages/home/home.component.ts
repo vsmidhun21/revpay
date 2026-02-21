@@ -45,7 +45,7 @@ export class HomeComponent {
 
   stats = [
     { value: '50K+', label: 'Active Users' },
-    { value: '$2B+', label: 'Transactions Processed' },
+    { value: '₹2B+', label: 'Transactions Processed' },
     { value: '99.9%', label: 'Uptime SLA' },
     { value: '128-bit', label: 'Encryption' },
   ];

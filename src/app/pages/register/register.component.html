@@ -81,8 +81,7 @@
         <div class="form-header">
           <div class="back-btn" (click)="step = 1">← Back</div>
           <h1>Your details</h1>
-          <p>{{ accountType === 'BUSINESS' ? 'Tell us about you and your business.' : 'Fill in your personal
-            information.' }}</p>
+          <p>Fill in your personal information.</p>
         </div>
 
         <form [formGroup]="form" novalidate>
@@ -117,41 +116,7 @@
             <div class="field-error" *ngIf="f['phone'].invalid && f['phone'].touched">Enter a valid phone number.</div>
           </div>
 
-          <!-- Business Fields -->
-          <ng-container *ngIf="accountType === 'BUSINESS'">
-            <div class="field-group">
-              <label>Business Name</label>
-              <div class="input-wrap" [class.error]="f['businessName'].invalid && f['businessName'].touched">
-                <span class="input-icon">🏢</span>
-                <input type="text" formControlName="businessName" placeholder="Acme Corp" />
-              </div>
-              <div class="field-error" *ngIf="f['businessName'].invalid && f['businessName'].touched">Business name is
-                required.</div>
-            </div>
-            <div class="field-row">
-              <div class="field-group">
-                <label>Business Type</label>
-                <div class="input-wrap" [class.error]="f['businessType'].invalid && f['businessType'].touched">
-                  <span class="input-icon">📋</span>
-                  <select formControlName="businessType">
-                    <option value="" disabled>Select type</option>
-                    <option value="SOLE_PROPRIETOR">Sole Proprietor</option>
-                    <option value="LLC">LLC</option>
-                    <option value="CORPORATION">Corporation</option>
-                    <option value="PARTNERSHIP">Partnership</option>
-                    <option value="NON_PROFIT">Non-Profit</option>
-                  </select>
-                </div>
-              </div>
-              <div class="field-group">
-                <label>Tax ID (optional)</label>
-                <div class="input-wrap">
-                  <span class="input-icon">🪪</span>
-                  <input type="text" formControlName="taxId" placeholder="XX-XXXXXXX" />
-                </div>
-              </div>
-            </div>
-          </ng-container>
+          
         </form>
 
         <button type="button" class="btn-submit" (click)="nextStep()">

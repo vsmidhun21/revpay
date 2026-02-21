@@ -37,11 +37,9 @@ export class RegisterComponent {
       phone: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{7,15}$/)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
-      // Business fields
       businessName: [''],
       businessType: [''],
       taxId: [''],
-      // 👇 New security fields
       securityQuestion: ['', Validators.required],
       securityAnswer: ['', [Validators.required, Validators.minLength(3)]],
       agreeTerms: [false, Validators.requiredTrue],
@@ -53,22 +51,13 @@ export class RegisterComponent {
 
   selectAccountType(type: 'PERSONAL' | 'BUSINESS') {
     this.accountType = type;
-    if (type === 'BUSINESS') {
-      this.f['businessName'].setValidators(Validators.required);
-      this.f['businessType'].setValidators(Validators.required);
-    } else {
-      this.f['businessName'].clearValidators();
-      this.f['businessType'].clearValidators();
-    }
-    this.f['businessName'].updateValueAndValidity();
-    this.f['businessType'].updateValueAndValidity();
     this.step = 2;
   }
 
   nextStep() {
     // Validate step 2 fields
     const step2Fields = ['fullName', 'email', 'phone'];
-    if (this.accountType === 'BUSINESS') step2Fields.push('businessName', 'businessType');
+    // if (this.accountType === 'BUSINESS') step2Fields.push('businessName', 'businessType');
     step2Fields.forEach(f => this.form.get(f)?.markAsTouched());
     const step2Valid = step2Fields.every(f => this.form.get(f)?.valid);
     if (step2Valid) this.step = 3;
