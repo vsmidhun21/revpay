@@ -26,7 +26,9 @@ export class RegisterComponent {
   accountType: 'PERSONAL' | 'BUSINESS' = 'PERSONAL';
   loading = false;
   error = '';
+  success = '';
   showPassword = false;
+  showAnswer = false;
 
   form: FormGroup = this.fb.group(
     {
@@ -39,6 +41,9 @@ export class RegisterComponent {
       businessName: [''],
       businessType: [''],
       taxId: [''],
+      // 👇 New security fields
+      securityQuestion: ['', Validators.required],
+      securityAnswer: ['', [Validators.required, Validators.minLength(3)]],
       agreeTerms: [false, Validators.requiredTrue],
     },
     { validators: passwordMatch }
@@ -75,13 +80,26 @@ export class RegisterComponent {
 
     this.loading = true;
     this.error = '';
+    this.success = '';
 
-    const { confirmPassword, agreeTerms, ...payload } = this.form.value;
+    const { confirmPassword, agreeTerms, securityAnswer, ...rest } = this.form.value;
 
-    this.authService.register({ ...payload, accountType: this.accountType }).subscribe({
+    const payload = {
+      ...rest,
+      accountType: this.accountType,
+      securityAnswer: securityAnswer.trim().toLowerCase(), // 👈 normalize answer
+    };
+
+    this.authService.register(payload).subscribe({
       next: (res) => {
-        this.authService.saveToken(res.token);
-        this.router.navigate(['/dashboard']);
+        this.loading = false;
+        this.success = 'Registration successful! Redirecting you to login...';
+
+        // Auto-dismiss after 3 seconds then navigate
+        setTimeout(() => {
+          this.success = '';
+          this.router.navigate(['/login']);
+        }, 3000);
       },
       error: (err) => {
         this.loading = false;
@@ -106,5 +124,50 @@ export class RegisterComponent {
       { level: 4, label: 'Strong', color: '#22c55e' },
     ];
     return levels[score] || levels[0];
+  }
+
+  dropdownOpen = false;
+
+  securityQuestions = [
+    {
+      group: 'Personal',
+      questions: [
+        { value: 'CHILDHOOD_CITY',     label: 'What city did you grow up in?' },
+        { value: 'CHILDHOOD_NICKNAME', label: 'What was your childhood nickname?' },
+        { value: 'PARENTS_MET',        label: 'In what city did your parents meet?' },
+      ],
+    },
+    {
+      group: 'School & Career',
+      questions: [
+        { value: 'ELEMENTARY_SCHOOL', label: 'What elementary school did you attend?' },
+        { value: 'FIRST_JOB',         label: 'What was the name of your first employer?' },
+        { value: 'COLLEGE_MAJOR',     label: 'What was your college major?' },
+      ],
+    },
+    {
+      group: 'Memorable Things',
+      questions: [
+        { value: 'FIRST_CAR',         label: 'What was the make and model of your first car?' },
+        { value: 'CHILDHOOD_FRIEND',  label: 'What is the first name of your childhood best friend?' },
+        { value: 'FIRST_PET',         label: 'What was the name of your first pet?' },
+        { value: 'FAVORITE_TEACHER',  label: 'What is the last name of your favorite teacher?' },
+      ],
+    },
+  ];
+
+  selectQuestion(value: string) {
+    this.form.get('securityQuestion')!.setValue(value);
+    this.form.get('securityQuestion')!.markAsTouched();
+    this.dropdownOpen = false;
+  }
+
+  getSelectedLabel(): string {
+    const val = this.form.get('securityQuestion')!.value;
+    for (const group of this.securityQuestions) {
+      const match = group.questions.find(q => q.value === val);
+      if (match) return match.label;
+    }
+    return '';
   }
 }

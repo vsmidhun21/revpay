@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface LoginRequest {
   identifier: string; // email or phone
@@ -13,6 +14,8 @@ export interface RegisterRequest {
   phone: string;
   password: string;
   accountType: 'PERSONAL' | 'BUSINESS';
+  securityQuestion: string;
+  securityAnswer: string;
   // Business-only fields
   businessName?: string;
   businessType?: string;
@@ -30,14 +33,14 @@ export interface AuthResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8080/api/auth'; // Spring Boot backend
+  private baseUrl = `${environment.apiBaseUrl}`;
 
   login(payload: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, payload);
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, payload);
   }
 
   register(payload: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/register`, payload);
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/register`, payload);
   }
 
   saveToken(token: string): void {

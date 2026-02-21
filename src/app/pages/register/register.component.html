@@ -1,4 +1,5 @@
 <div class="auth-layout">
+
   <!-- Left panel -->
   <div class="auth-left">
     <a routerLink="/" class="logo">
@@ -46,6 +47,7 @@
   <!-- Right panel -->
   <div class="auth-right">
     <div class="form-wrap">
+
       <!-- STEP 1: Account Type -->
       <div *ngIf="step === 1" class="step-panel">
         <div class="form-header">
@@ -79,7 +81,8 @@
         <div class="form-header">
           <div class="back-btn" (click)="step = 1">← Back</div>
           <h1>Your details</h1>
-          <p>{{ accountType === 'BUSINESS' ? 'Tell us about you and your business.' : 'Fill in your personal information.' }}</p>
+          <p>{{ accountType === 'BUSINESS' ? 'Tell us about you and your business.' : 'Fill in your personal
+            information.' }}</p>
         </div>
 
         <form [formGroup]="form" novalidate>
@@ -98,15 +101,18 @@
               <span class="input-icon">✉</span>
               <input type="email" formControlName="email" placeholder="you@example.com" />
             </div>
-            <div class="field-error" *ngIf="f['email'].errors?.['required'] && f['email'].touched">Email is required.</div>
-            <div class="field-error" *ngIf="f['email'].errors?.['email'] && f['email'].touched">Enter a valid email.</div>
+            <div class="field-error" *ngIf="f['email'].errors?.['required'] && f['email'].touched">Email is required.
+            </div>
+            <div class="field-error" *ngIf="f['email'].errors?.['email'] && f['email'].touched">Enter a valid email.
+            </div>
           </div>
 
           <div class="field-group">
             <label>Phone Number</label>
             <div class="input-wrap" [class.error]="f['phone'].invalid && f['phone'].touched">
               <span class="input-icon">📱</span>
-              <input type="tel" formControlName="phone" placeholder="+1 555 000 0000" />
+              <input type="tel" formControlName="phone" placeholder="5550000000" pattern="^[6-9][0-9]{9,14}$"
+                maxlength="10" />
             </div>
             <div class="field-error" *ngIf="f['phone'].invalid && f['phone'].touched">Enter a valid phone number.</div>
           </div>
@@ -119,7 +125,8 @@
                 <span class="input-icon">🏢</span>
                 <input type="text" formControlName="businessName" placeholder="Acme Corp" />
               </div>
-              <div class="field-error" *ngIf="f['businessName'].invalid && f['businessName'].touched">Business name is required.</div>
+              <div class="field-error" *ngIf="f['businessName'].invalid && f['businessName'].touched">Business name is
+                required.</div>
             </div>
             <div class="field-row">
               <div class="field-group">
@@ -160,8 +167,20 @@
           <p>Create a strong password to protect your account.</p>
         </div>
 
+        <!-- Step 3 banners — error & success -->
         <div class="error-banner" *ngIf="error">
-          <span>⚠</span> {{ error }}
+          <span class="banner-icon">⚠</span>
+          <span>{{ error }}</span>
+        </div>
+
+        <div class="success-banner" *ngIf="success">
+          <span class="banner-icon">✅</span>
+          <div class="success-body">
+            <span>{{ success }}</span>
+            <div class="success-progress">
+              <div class="success-progress-bar"></div>
+            </div>
+          </div>
         </div>
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
@@ -169,11 +188,8 @@
             <label>Password</label>
             <div class="input-wrap" [class.error]="f['password'].invalid && f['password'].touched">
               <span class="input-icon">🔑</span>
-              <input
-                [type]="showPassword ? 'text' : 'password'"
-                formControlName="password"
-                placeholder="Min. 8 characters"
-              />
+              <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                placeholder="Min. 8 characters" />
               <button type="button" class="toggle-pw" (click)="showPassword = !showPassword">
                 {{ showPassword ? '🙈' : '👁' }}
               </button>
@@ -197,16 +213,79 @@
             <label>Confirm Password</label>
             <div class="input-wrap" [class.error]="f['confirmPassword'].touched && form.errors?.['passwordMismatch']">
               <span class="input-icon">🔒</span>
-              <input
-                type="password"
-                formControlName="confirmPassword"
-                placeholder="Re-enter password"
-              />
+              <input type="password" formControlName="confirmPassword" placeholder="Re-enter password" />
             </div>
             <div class="field-error" *ngIf="f['confirmPassword'].touched && form.errors?.['passwordMismatch']">
               Passwords do not match.
             </div>
           </div>
+
+          <!-- ── SECURITY SECTION ─────────────────────────────────── -->
+          <div class="security-section">
+
+
+            <div class="field-group">
+              <label>Security Question</label>
+
+              <!-- Custom Dropdown -->
+              <div class="custom-select" [class.error]="f['securityQuestion'].invalid && f['securityQuestion'].touched"
+                [class.open]="dropdownOpen" (clickOutside)="dropdownOpen = false">
+
+                <!-- Trigger Button -->
+                <div class="custom-select-trigger" (click)="dropdownOpen = !dropdownOpen">
+                  <span class="input-icon">❓</span>
+                  <span class="select-value" [class.placeholder]="!f['securityQuestion'].value">
+                    {{ getSelectedLabel() || 'Choose a security question' }}
+                  </span>
+                  <span class="select-arrow" [class.rotated]="dropdownOpen">▾</span>
+                </div>
+
+                <!-- Dropdown Panel -->
+                <div class="custom-select-panel" *ngIf="dropdownOpen">
+                  <div *ngFor="let group of securityQuestions">
+                    <div class="option-group-label">{{ group.group }}</div>
+                    <div class="option-item" *ngFor="let q of group.questions"
+                      [class.selected]="f['securityQuestion'].value === q.value" (click)="selectQuestion(q.value)">
+                      <span class="option-check" *ngIf="f['securityQuestion'].value === q.value">✓</span>
+                      {{ q.label }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hidden native select keeps the FormControl in sync -->
+              <select formControlName="securityQuestion" style="display:none">
+                <option value="">Choose a security question</option>
+                <option *ngFor="let group of securityQuestions" [attr.disabled]="true">{{ group.group }}</option>
+                <ng-container *ngFor="let group of securityQuestions">
+                  <option *ngFor="let q of group.questions" [value]="q.value">{{ q.label }}</option>
+                </ng-container>
+              </select>
+
+              <div class="field-error" *ngIf="f['securityQuestion'].invalid && f['securityQuestion'].touched">
+                Please select a security question.
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label>Security Answer</label>
+              <div class="input-wrap" [class.error]="f['securityAnswer'].invalid && f['securityAnswer'].touched">
+                <span class="input-icon">🛡</span>
+                <input [type]="showAnswer ? 'text' : 'password'" formControlName="securityAnswer"
+                  placeholder="Your answer (case-insensitive)" autocomplete="off" />
+                <button type="button" class="toggle-pw" (click)="showAnswer = !showAnswer">
+                  {{ showAnswer ? '🙈' : '👁' }}
+                </button>
+              </div>
+              <div class="field-error" *ngIf="f['securityAnswer'].errors?.['required'] && f['securityAnswer'].touched">
+                Security answer is required.
+              </div>
+              <div class="field-error" *ngIf="f['securityAnswer'].errors?.['minlength'] && f['securityAnswer'].touched">
+                Answer must be at least 3 characters.
+              </div>
+            </div>
+          </div>
+          <!-- ── END SECURITY SECTION ─────────────────────────────── -->
 
           <label class="checkbox-label">
             <input type="checkbox" formControlName="agreeTerms" />
@@ -222,6 +301,8 @@
           </button>
         </form>
       </div>
+
     </div>
   </div>
+
 </div>
