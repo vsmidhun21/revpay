@@ -13,5 +13,13 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent),
   },
+  {
+    path: 'forgot-password',
+    loadComponent: () => import('./pages/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+  },
   { path: '**', redirectTo: '' },
 ];

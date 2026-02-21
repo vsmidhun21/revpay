@@ -58,4 +58,30 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('revpay_token');
   }
+
+  verifyIdentity(emailOrPhone: string): Observable<{ securityQuestion: string }> {
+    return this.http.post<{ securityQuestion: string }>(
+      `${this.baseUrl}/auth/forgot-password/verify-identity`, { emailOrPhone }
+    );
+  }
+
+  validateSecurity(payload: {
+    emailOrPhone: string;
+    securityQuestion: string;
+    securityAnswer: string;
+  }): Observable<{ resetToken: string }> {
+    return this.http.post<{ resetToken: string }>(
+      `${this.baseUrl}/auth/forgot-password/validate-security`, payload
+    );
+  }
+
+  resetPassword(payload: {
+    resetToken: string;
+    newPassword: string;
+  }): Observable<void> {
+    return this.http.post<void>(
+      `${this.baseUrl}/auth/forgot-password/reset`, payload
+    );
+  }
+
 }
