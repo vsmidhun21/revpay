@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface LoginRequest {
-  identifier: string; // email or phone
+  emailOrPhone: string;
   password: string;
 }
 

@@ -17,7 +17,7 @@ export class LoginComponent {
   private router = inject(Router);
 
   form: FormGroup = this.fb.group({
-    identifier: ['', [Validators.required]],
+    emailOrPhone: ['', [Validators.required]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
@@ -25,7 +25,7 @@ export class LoginComponent {
   error = '';
   showPassword = false;
 
-  get identifier() { return this.form.get('identifier')!; }
+  get emailOrPhone() { return this.form.get('emailOrPhone')!; }
   get password() { return this.form.get('password')!; }
 
   togglePassword() { this.showPassword = !this.showPassword; }
