@@ -76,7 +76,7 @@ export class RegisterComponent {
     const payload = {
       ...rest,
       accountType: this.accountType,
-      securityAnswer: securityAnswer.trim().toLowerCase(), // 👈 normalize answer
+      securityAnswer: securityAnswer.trim().toLowerCase(),
     };
 
     this.authService.register(payload).subscribe({
@@ -121,26 +121,26 @@ export class RegisterComponent {
     {
       group: 'Personal',
       questions: [
-        { value: 'CHILDHOOD_CITY',     label: 'What city did you grow up in?' },
-        { value: 'CHILDHOOD_NICKNAME', label: 'What was your childhood nickname?' },
-        { value: 'PARENTS_MET',        label: 'In what city did your parents meet?' },
+        { value: 'What city did you grow up in?', label: 'What city did you grow up in?' },
+        { value: 'What was your childhood nickname?', label: 'What was your childhood nickname?' },
+        { value: 'In what city did your parents meet?', label: 'In what city did your parents meet?' },
       ],
     },
     {
       group: 'School & Career',
       questions: [
-        { value: 'ELEMENTARY_SCHOOL', label: 'What elementary school did you attend?' },
-        { value: 'FIRST_JOB',         label: 'What was the name of your first employer?' },
-        { value: 'COLLEGE_MAJOR',     label: 'What was your college major?' },
+        { value: 'What elementary school did you attend?', label: 'What elementary school did you attend?' },
+        { value: 'What was the name of your first employer?', label: 'What was the name of your first employer?' },
+        { value: 'What was your college major?', label: 'What was your college major?' },
       ],
     },
     {
       group: 'Memorable Things',
       questions: [
-        { value: 'FIRST_CAR',         label: 'What was the make and model of your first car?' },
-        { value: 'CHILDHOOD_FRIEND',  label: 'What is the first name of your childhood best friend?' },
-        { value: 'FIRST_PET',         label: 'What was the name of your first pet?' },
-        { value: 'FAVORITE_TEACHER',  label: 'What is the last name of your favorite teacher?' },
+        { value: 'What was the make and model of your first car?', label: 'What was the make and model of your first car?' },
+        { value: 'What is the first name of your childhood best friend?', label: 'What is the first name of your childhood best friend?' },
+        { value: 'What was the name of your first pet?', label: 'What was the name of your first pet?' },
+        { value: 'What is the last name of your favorite teacher?', label: 'What is the last name of your favorite teacher?' },
       ],
     },
   ];
@@ -159,4 +159,5 @@ export class RegisterComponent {
     }
     return '';
   }
+  
 }
