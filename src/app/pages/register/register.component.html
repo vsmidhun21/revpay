@@ -254,7 +254,7 @@
 
           <label class="checkbox-label">
             <input type="checkbox" formControlName="agreeTerms" />
-            <span>I agree to RevPay's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+            <span>I agree to RevPay's <a routerLink="/terms-conditions" target="_blank">Terms of Service</a> and  <a routerLink="/privacy-policy" target="_blank">Privacy Policy</a></span>
           </label>
           <div class="field-error" *ngIf="f['agreeTerms'].invalid && f['agreeTerms'].touched">
             You must accept the terms to continue.

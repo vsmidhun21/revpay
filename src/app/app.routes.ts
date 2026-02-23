@@ -21,5 +21,15 @@ export const routes: Routes = [
     path: 'dashboard',
     loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
   },
+  {
+    path: 'privacy-policy',
+    loadComponent: () => import('./pages/legal/privacy-policy/privacy-policy.component')
+      .then(m => m.PrivacyPolicyComponent),
+  },
+  {
+    path: 'terms-conditions',
+    loadComponent: () => import('./pages/legal/terms-conditions/terms-conditions.component')
+      .then(m => m.TermsConditionsComponent),
+  },
   { path: '**', redirectTo: '' },
 ];
