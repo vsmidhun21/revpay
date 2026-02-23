@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule, AbstractControl
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 
 function passwordStrong(control: AbstractControl) {
   const v = control.value || '';

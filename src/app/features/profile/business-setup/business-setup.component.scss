@@ -1,0 +1,74 @@
+// Reuse the personal-setup styles — import and override accent color for business
+@import '../personal-setup/personal-setup.component.scss';
+
+// Business accent — slightly warmer teal to differentiate
+.setup-left::before {
+  background: radial-gradient(circle, rgba(56,178,172,0.12) 0%, transparent 70%);
+}
+.setup-left::after {
+  background: radial-gradient(circle, rgba(56,178,172,0.08) 0%, transparent 70%);
+}
+
+.brand .brand-icon {
+  background: linear-gradient(135deg, #38b2ac, #2c7a7b);
+}
+
+.left-content h1 .highlight {
+  background: linear-gradient(135deg, #38b2ac, #81e6d9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.step-item.active .step-dot {
+  border-color: #38b2ac;
+  color: #38b2ac;
+  background: rgba(56,178,172,0.1);
+}
+
+.step-connector.done {
+  background: linear-gradient(to bottom, #38b2ac, #2d3748);
+}
+
+.form-header .step-tag {
+  color: #2c7a7b;
+  background: #e6fffa;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2c7a7b, #285e61);
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 20px rgba(44,122,123,0.4);
+  }
+}
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: #38b2ac;
+  box-shadow: 0 0 0 3px rgba(56,178,172,0.15);
+}
+
+// Verification notice
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 32px;
+  padding: 14px 16px;
+  background: rgba(56,178,172,0.08);
+  border: 1px solid rgba(56,178,172,0.2);
+  border-radius: 10px;
+
+  svg {
+    width: 18px; height: 18px;
+    color: #38b2ac;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  p {
+    font-size: 13px;
+    color: #4a9e9e;
+    line-height: 1.5;
+    margin: 0;
+  }
+}

@@ -2,7 +2,8 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/auth.service';
+import { AuthService } from '../../core/services/auth.service';
+import { TokenService } from '../../core/services/token.service';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ import { AuthService } from '../../core/auth.service';
 export class LoginComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private tokenService = inject(TokenService);
   private router = inject(Router);
 
   form: FormGroup = this.fb.group({
@@ -41,7 +43,9 @@ export class LoginComponent {
     this.authService.login(this.form.value).subscribe({
       next: (res) => {
         this.authService.saveToken(res.token);
-        this.router.navigate(['/dashboard']);
+        this.tokenService.setToken(res.token);
+        // this.router.navigate(['/dashboard']);
+        this.router.navigate(['/init'])
       },
       error: (err) => {
         this.loading = false;
