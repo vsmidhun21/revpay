@@ -64,7 +64,11 @@
             <div class="user-type">{{ profile!.accountType | titlecase }} Account</div>
           </div>
         </div>
-        <button class="logout-btn" (click)="logout()">⏻</button>
+        <button class="logout-btn" (click)="logout()" [disabled]="loggingOut"
+          [title]="loggingOut ? 'Signing out...' : 'Sign out'">
+          <span *ngIf="!loggingOut">⏻</span>
+          <span *ngIf="loggingOut" class="logout-spinner"></span>
+        </button>
       </div>
     </aside>
 
@@ -75,7 +79,7 @@
       <div class="topbar">
         <div>
           <!-- ← CHANGED: firstName getter used instead of .split(' ')[0] -->
-          <h1 class="page-title">Good morning, {{ firstName }} 👋</h1>
+          <h1 class="page-title">{{ greeting }}, {{ firstName }} {{ greetingEmoji }}</h1>
           <!-- ← CHANGED: show business name for business, email for personal -->
           <p class="page-sub">
             <ng-container *ngIf="profile!.accountType === 'BUSINESS'">
@@ -142,8 +146,7 @@
         <div class="quick-actions-card">
           <div class="card-title">Quick Actions</div>
           <div class="actions-grid">
-            <button class="action-btn" *ngFor="let a of quickActions"
-              [style.--action-color]="a.color">
+            <button class="action-btn" *ngFor="let a of quickActions" [style.--action-color]="a.color">
               <span class="action-icon">{{ a.icon }}</span>
               <span class="action-label">{{ a.label }}</span>
             </button>
@@ -169,9 +172,7 @@
                 <div class="txn-note">{{ t.note }}</div>
               </div>
               <div class="txn-right">
-                <div class="txn-amount"
-                  [class.positive]="t.amount > 0"
-                  [class.negative]="t.amount < 0">
+                <div class="txn-amount" [class.positive]="t.amount > 0" [class.negative]="t.amount < 0">
                   {{ t.amount > 0 ? '+' : '' }}₹{{ t.amount | number:'1.2-2' }}
                 </div>
                 <div class="txn-date">{{ t.date }}</div>
@@ -187,9 +188,7 @@
             <a href="#" class="see-all">Mark all read</a>
           </div>
           <div class="notif-list">
-            <div class="notif-item"
-              *ngFor="let n of notifications"
-              [class.unread]="n.unread">
+            <div class="notif-item" *ngFor="let n of notifications" [class.unread]="n.unread">
               <div class="notif-icon">{{ n.icon }}</div>
               <div class="notif-info">
                 <div class="notif-message">{{ n.message }}</div>

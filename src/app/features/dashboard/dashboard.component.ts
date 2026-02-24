@@ -94,8 +94,41 @@ export class DashboardComponent implements OnInit {
       && this.profile?.businessStatus === 'PENDING_VERIFICATION';
   }
 
+  loggingOut = false;
+
   logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    this.loggingOut = true;
+
+    this.authService.logout().subscribe({
+      next: () => {
+        this.authService.clearSession();
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        // Even if API fails, clear local session and redirect
+        // This handles expired tokens or network issues gracefully
+        this.authService.clearSession();
+        this.router.navigate(['/login']);
+      },
+    });
   }
+
+  get greeting(): string {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12)  return 'Good morning';
+    if (hour >= 12 && hour < 17) return 'Good afternoon';
+    if (hour >= 17 && hour < 21) return 'Good evening';
+    return 'Good night';
+  }
+
+  get greetingEmoji(): string {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12)  return '☀️';
+    if (hour >= 12 && hour < 17) return '👋';
+    if (hour >= 17 && hour < 21) return '🌆';
+    return '🌙';
+  }
+
 }

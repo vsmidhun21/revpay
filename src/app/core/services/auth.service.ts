@@ -55,9 +55,15 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  logout(): void {
+  clearSession(): void {
     localStorage.removeItem('revpay_token');
   }
+
+  logout(): Observable<void> {
+    const token = this.getToken();
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.post<void>(`${this.baseUrl}/auth/logout`, {}, { headers });
+}
 
   verifyIdentity(emailOrPhone: string): Observable<{ securityQuestion: string }> {
     return this.http.post<{ securityQuestion: string }>(
