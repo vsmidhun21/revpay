@@ -1,105 +1,145 @@
+<!-- Loading -->
+<div class="loading-overlay" *ngIf="loading">
+  <div class="spinner"></div>
+</div>
 
-      <!-- ── Business Pending Verification Banner ──────────── -->
-      <!-- ← CHANGED: new banner — only shown for pending business accounts -->
-      <div class="banner-warning" *ngIf="isBusinessPendingVerification">
-        <span class="banner-icon">⚠</span>
-        <span>
-          Your business account is <strong>pending verification.</strong>
-          Some features may be restricted until verification is complete.
-        </span>
+<div class="dashboard-content" *ngIf="!loading && profile">
+
+  <!-- ── Top bar ─────────────────────────────────────────────── -->
+  <div class="topbar">
+    <div>
+      <h1 class="page-title">
+        {{ greeting }}, {{ firstName }} {{ greetingEmoji }}
+      </h1>
+      <p class="page-sub">
+        <ng-container *ngIf="profile!.accountType === 'BUSINESS'">
+          {{ profile!.businessName }}
+        </ng-container>
+        <ng-container *ngIf="profile!.accountType !== 'BUSINESS'">
+          Here's what's happening with your account today.
+        </ng-container>
+      </p>
+    </div>
+    <div class="topbar-actions">
+      <a routerLink="/notifications" class="icon-btn">
+        🔔 <span class="notif-dot"></span>
+      </a>
+      <a routerLink="/send-money" class="btn-primary sm">↗ Send</a>
+    </div>
+  </div>
+
+  <!-- ── Business pending verification banner ─────────────────── -->
+  <div class="banner-warning" *ngIf="isBusinessPendingVerification">
+    <span class="banner-icon">⚠</span>
+    <span>
+      Your business account is <strong>pending verification.</strong>
+      Some features may be restricted until verification is complete.
+    </span>
+  </div>
+
+  <!-- ── Row 1: Wallet + Quick Actions ────────────────────────── -->
+  <div class="top-row">
+
+    <!-- Wallet card -->
+    <div class="wallet-card">
+      <div class="wallet-bg-circle"></div>
+      <div class="wallet-label">Total Wallet Balance</div>
+      <div class="wallet-balance">
+        ₹{{ profile!.walletBalance | number:'1.2-2' }}
       </div>
-
-      <!-- ── Balance + Quick Actions ───────────────────────── -->
-      <div class="top-row">
-
-        <!-- Wallet card -->
-        <div class="wallet-card">
-          <div class="wallet-bg-circle"></div>
-          <div class="wallet-label">Total Wallet Balance</div>
-          <!-- ← CHANGED: real balance from profile -->
-          <div class="wallet-balance">
-            ₹{{ profile!.walletBalance | number:'1.2-2' }}
-          </div>
-          <div class="wallet-meta">
-            <!-- ← CHANGED: show linked bank account details from profile -->
-            <ng-container *ngIf="profile!.bankAccount as bank">
-              <div class="meta-item">
-                <span class="meta-icon bank">🏦</span>
-                <div>
-                  <div class="meta-label">Linked Bank</div>
-                  <div class="meta-value">
-                    {{ bank.bankName }} ··{{ bank.accountNumber | slice:-4 }}
-                  </div>
-                </div>
-              </div>
-              <div class="meta-divider"></div>
-            </ng-container>
-            <div class="meta-item">
-              <span class="meta-icon success">✓</span>
-              <div>
-                <div class="meta-label">Account</div>
-                <div class="meta-value">Active</div>
+      <div class="wallet-meta">
+        <ng-container *ngIf="profile!.bankAccount as bank">
+          <div class="meta-item">
+            <span class="meta-icon bank">🏦</span>
+            <div>
+              <div class="meta-label">Linked Bank</div>
+              <div class="meta-value">
+                {{ bank.bankName }} ··{{ bank.accountNumber | slice:-4 }}
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- Quick actions -->
-        <div class="quick-actions-card">
-          <div class="card-title">Quick Actions</div>
-          <div class="actions-grid">
-            <button class="action-btn" *ngFor="let a of quickActions" [style.--action-color]="a.color">
-              <span class="action-icon">{{ a.icon }}</span>
-              <span class="action-label">{{ a.label }}</span>
-            </button>
+          <div class="meta-divider"></div>
+        </ng-container>
+        <div class="meta-item">
+          <span class="meta-icon pending">⏳</span>
+          <div>
+            <div class="meta-label">Pending</div>
+            <div class="meta-value">₹{{ pendingAmount | number:'1.2-2' }}</div>
           </div>
         </div>
-
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <span class="meta-icon success">✓</span>
+          <div>
+            <div class="meta-label">Account</div>
+            <div class="meta-value">Active</div>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <!-- ── Transactions + Notifications ──────────────────── -->
-      <div class="bottom-row">
-
-        <!-- Recent transactions -->
-        <div class="transactions-card">
-          <div class="card-header">
-            <div class="card-title">Recent Transactions</div>
-            <a href="#" class="see-all">See all →</a>
-          </div>
-          <div class="txn-list">
-            <div class="txn-item" *ngFor="let t of transactions">
-              <div class="txn-icon" [class]="t.type">{{ t.icon }}</div>
-              <div class="txn-info">
-                <div class="txn-name">{{ t.name }}</div>
-                <div class="txn-note">{{ t.note }}</div>
-              </div>
-              <div class="txn-right">
-                <div class="txn-amount" [class.positive]="t.amount > 0" [class.negative]="t.amount < 0">
-                  {{ t.amount > 0 ? '+' : '' }}₹{{ t.amount | number:'1.2-2' }}
-                </div>
-                <div class="txn-date">{{ t.date }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Notifications -->
-        <div class="notifications-card">
-          <div class="card-header">
-            <div class="card-title">Notifications</div>
-            <a href="#" class="see-all">Mark all read</a>
-          </div>
-          <div class="notif-list">
-            <div class="notif-item" *ngFor="let n of notifications" [class.unread]="n.unread">
-              <div class="notif-icon">{{ n.icon }}</div>
-              <div class="notif-info">
-                <div class="notif-message">{{ n.message }}</div>
-                <div class="notif-time">{{ n.time }}</div>
-              </div>
-              <div class="unread-dot" *ngIf="n.unread"></div>
-            </div>
-          </div>
-        </div>
-
+    <!-- Quick actions -->
+    <div class="quick-actions-card">
+      <div class="card-title">Quick Actions</div>
+      <div class="actions-grid">
+        <a class="action-btn" *ngFor="let a of quickActions"
+          [routerLink]="a.route"
+          [style.--action-color]="a.color">
+          <span class="action-icon">{{ a.icon }}</span>
+          <span class="action-label">{{ a.label }}</span>
+        </a>
       </div>
-    
+    </div>
+
+  </div>
+
+  <!-- ── Row 2: Transactions + Notifications ───────────────────── -->
+  <div class="bottom-row">
+
+    <!-- Recent transactions -->
+    <div class="transactions-card">
+      <div class="card-header">
+        <div class="card-title">Recent Transactions</div>
+        <a routerLink="/transactions" class="see-all">See all →</a>
+      </div>
+      <div class="txn-list">
+        <div class="txn-item" *ngFor="let t of transactions">
+          <div class="txn-icon-wrap" [class]="t.type">{{ t.icon }}</div>
+          <div class="txn-info">
+            <div class="txn-name">{{ t.name }}</div>
+            <div class="txn-note">{{ t.note }}</div>
+          </div>
+          <div class="txn-right">
+            <div class="txn-amount"
+              [class.positive]="t.amount > 0"
+              [class.negative]="t.amount < 0">
+              {{ t.amount > 0 ? '+' : '' }}₹{{ t.amount | number:'1.2-2' }}
+            </div>
+            <div class="txn-date">{{ t.date }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications panel -->
+    <div class="notifications-card">
+      <div class="card-header">
+        <div class="card-title">Notifications</div>
+        <a routerLink="/notifications" class="see-all">View all</a>
+      </div>
+      <div class="notif-list">
+        <div class="notif-item" *ngFor="let n of notifications"
+          [class.unread]="n.unread">
+          <div class="notif-icon">{{ n.icon }}</div>
+          <div class="notif-info">
+            <div class="notif-message">{{ n.message }}</div>
+            <div class="notif-time">{{ n.time }}</div>
+          </div>
+          <div class="unread-dot" *ngIf="n.unread"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -6,7 +6,7 @@ import { ApiResponse, MoneyRequest } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class MoneyRequestService {
-  private base = `${environment.apiBaseUrl}/money`;
+  private base = `${environment.apiBaseUrl}/money/requests`;
 
   constructor(private http: HttpClient) {}
 
@@ -19,22 +19,22 @@ export class MoneyRequestService {
   }
 
   getIncoming(): Observable<ApiResponse<MoneyRequest[]>> {
-    return this.http.get<ApiResponse<MoneyRequest[]>>(`${this.base}/requests/incoming`);
+    return this.http.get<ApiResponse<MoneyRequest[]>>(`${this.base}/incoming`);
   }
 
   getOutgoing(): Observable<ApiResponse<MoneyRequest[]>> {
-    return this.http.get<ApiResponse<MoneyRequest[]>>(`${this.base}/requests/outgoing`);
+    return this.http.get<ApiResponse<MoneyRequest[]>>(`${this.base}/outgoing`);
   }
 
   accept(requestId: number, pin: string): Observable<ApiResponse<void>> {
-    return this.http.put<ApiResponse<void>>(`${this.base}/requests/${requestId}/accept`, { pin });
+    return this.http.put<ApiResponse<void>>(`${this.base}/${requestId}/accept`, { pin });
   }
 
   decline(requestId: number): Observable<ApiResponse<void>> {
-    return this.http.put<ApiResponse<void>>(`${this.base}/requests/${requestId}/decline`, {});
+    return this.http.put<ApiResponse<void>>(`${this.base}/${requestId}/decline`, {});
   }
 
   cancel(requestId: number): Observable<ApiResponse<void>> {
-    return this.http.delete<ApiResponse<void>>(`${this.base}/requests/${requestId}/cancel`);
+    return this.http.delete<ApiResponse<void>>(`${this.base}/${requestId}/cancel`);
   }
 }
