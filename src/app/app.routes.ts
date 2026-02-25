@@ -49,33 +49,53 @@ export const routes: Routes = [
   // Protected — All authenticated users
   {
     path: 'dashboard',
-    component: ShellComponent,
     loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [AuthGuard]
   },
-  { path: 'transactions', canActivate: [AuthGuard], component: ShellComponent,
-    loadComponent: () => import('./pages/transactions/transactions.component').then(m => m.TransactionsComponent) 
-  },
-  { path: 'payment-methods',  canActivate: [AuthGuard], component: ShellComponent,
-    loadComponent: () => import('./pages/payment-methods/payment-methods.component').then(m => m.PaymentMethodsComponent) 
-  },
-  { path: 'requests',         canActivate: [AuthGuard], component: ShellComponent,
-    loadComponent: () => import('./pages/requests/requests.component').then(m => m.RequestsComponent) },
-  { path: 'send-money',       canActivate: [AuthGuard], component: ShellComponent,
-    loadComponent: () => import('./pages/send-money/send-money.component').then(m => m.SendMoneyComponent) },
-  { path: 'notifications',    canActivate: [AuthGuard], component: ShellComponent,
-    loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent) },
-  { path: 'settings',         canActivate: [AuthGuard], component: ShellComponent,
-    loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent) },
+  // { path: 'transactions', canActivate: [AuthGuard], component: ShellComponent,
+  //   loadComponent: () => import('./pages/transactions/transactions.component').then(m => m.TransactionsComponent) 
+  // },
+  // { path: 'payment-methods',  canActivate: [AuthGuard], component: ShellComponent,
+  //   loadComponent: () => import('./pages/payment-methods/payment-methods.component').then(m => m.PaymentMethodsComponent) 
+  // },
+  // { path: 'requests',         canActivate: [AuthGuard], component: ShellComponent,
+  //   loadComponent: () => import('./pages/requests/requests.component').then(m => m.RequestsComponent) },
+  // { path: 'send-money',       canActivate: [AuthGuard], component: ShellComponent,
+  //   loadComponent: () => import('./pages/send-money/send-money.component').then(m => m.SendMoneyComponent) },
+  // { path: 'notifications',    canActivate: [AuthGuard], component: ShellComponent,
+  //   loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent) },
+  // { path: 'settings',         canActivate: [AuthGuard], component: ShellComponent,
+  //   loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent) },
 
-  // Protected — Business only
-  { path: 'invoices',   canActivate: [AuthGuard, businessGuard], component: ShellComponent,
-     loadComponent: () => import('./pages/invoices/invoices.component').then(m => m.InvoicesComponent) 
-    },
-  { path: 'loans',      canActivate: [AuthGuard, businessGuard], component: ShellComponent,
-    loadComponent: () => import('./pages/loans/loans.component').then(m => m.LoansComponent) },
-  { path: 'analytics',  canActivate: [AuthGuard, businessGuard], component: ShellComponent,
-    loadComponent: () => import('./pages/analytics/analytics.component').then(m => m.AnalyticsComponent) },
+  // // Protected — Business only
+  // { path: 'invoices',   canActivate: [AuthGuard, businessGuard], component: ShellComponent,
+  //    loadComponent: () => import('./pages/invoices/invoices.component').then(m => m.InvoicesComponent) 
+  //   },
+  // { path: 'loans',      canActivate: [AuthGuard, businessGuard], component: ShellComponent,
+  //   loadComponent: () => import('./pages/loans/loans.component').then(m => m.LoansComponent) },
+  // { path: 'analytics',  canActivate: [AuthGuard, businessGuard], component: ShellComponent,
+  //   loadComponent: () => import('./pages/analytics/analytics.component').then(m => m.AnalyticsComponent) },
+
+
+  {
+    path: '',
+    component: ShellComponent,
+    canActivate: [AuthGuard],
+    children: [
+      // { path: 'dashboard',       loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent) },
+      { path: 'transactions',    loadComponent: () => import('./pages/transactions/transactions.component').then(m => m.TransactionsComponent) },
+      { path: 'payment-methods', loadComponent: () => import('./pages/payment-methods/payment-methods.component').then(m => m.PaymentMethodsComponent) },
+      { path: 'requests',        loadComponent: () => import('./pages/requests/requests.component').then(m => m.RequestsComponent) },
+      { path: 'send-money',      loadComponent: () => import('./pages/send-money/send-money.component').then(m => m.SendMoneyComponent) },
+      { path: 'notifications',   loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent) },
+      { path: 'settings',        loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent) },
+      // Business only
+      { path: 'invoices',   canActivate: [businessGuard], loadComponent: () => import('./pages/invoices/invoices.component').then(m => m.InvoicesComponent) },
+      { path: 'loans',      canActivate: [businessGuard], loadComponent: () => import('./pages/loans/loans.component').then(m => m.LoansComponent) },
+      { path: 'analytics',  canActivate: [businessGuard], loadComponent: () => import('./pages/analytics/analytics.component').then(m => m.AnalyticsComponent) },
+    ]
+  },
+
 
   { path: '**', redirectTo: '' },
 ];

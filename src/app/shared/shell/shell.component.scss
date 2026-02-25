@@ -14,7 +14,7 @@ $sidebar-w: 230px;
 
 .shell-layout {
   display: grid;
-  grid-template-columns: $sidebar-w 1fr;
+  // grid-template-columns: $sidebar-w 1fr;
   min-height: 100vh;
 
   @media (max-width: 768px) { grid-template-columns: 1fr; }
