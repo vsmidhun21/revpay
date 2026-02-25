@@ -46,7 +46,7 @@
       <div class="form-group">
         <label>Transaction PIN</label>
         <div class="pin-input-wrap">
-          <input [type]="showPin ? 'text' : 'password'" [formControl]="form.get('pin')!"
+          <input [type]="showPin ? 'text' : 'password'" [formControl]="pinControl"
             placeholder="••••" maxlength="6"/>
           <button type="button" class="pin-toggle" (click)="showPin = !showPin">
             {{ showPin ? '🙈' : '👁' }}

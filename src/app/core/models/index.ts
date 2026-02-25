@@ -18,39 +18,39 @@ export interface PagedResponse<T> {
 }
 
 // ── User / Profile ────────────────────────────────────────────
-export interface BankAccount {
-  accountId: number;
-  accountHolderName: string;
-  accountNumber: string;      // masked: ****4291
-  bankName: string;
-  ifscCode: string;
-  isPrimary: boolean;
-  status: 'ACTIVE' | 'INACTIVE';
-}
+// export interface BankAccount {
+//   accountId: number;
+//   accountHolderName: string;
+//   accountNumber: string;      // masked: ****4291
+//   bankName: string;
+//   ifscCode: string;
+//   isPrimary: boolean;
+//   status: 'ACTIVE' | 'INACTIVE';
+// }
 
-export interface UserProfile {
-  userId: number;
-  fullName: string;
-  email: string;
-  phone: string;
-  accountType: 'PERSONAL' | 'BUSINESS';
-  walletBalance: number;
-  currency: string;
-  profileComplete: boolean;
-  // personal only
-  dob?: string;
-  address?: string;
-  // business only
-  businessName?: string;
-  businessType?: 'SOLE_PROPRIETOR' | 'LLC' | 'CORPORATION' | 'PARTNERSHIP' | 'NON_PROFIT';
-  taxId?: string;
-  businessAddress?: string;
-  businessStatus?: 'ACTIVE' | 'PENDING_VERIFICATION' | 'SUSPENDED';
-  contactPhone?: string;
-  website?: string;
-  // linked bank
-  bankAccount?: BankAccount;
-}
+// export interface UserProfile {
+//   userId: number;
+//   fullName: string;
+//   email: string;
+//   phone: string;
+//   accountType: 'PERSONAL' | 'BUSINESS';
+//   walletBalance: number;
+//   currency: string;
+//   profileComplete: boolean;
+//   // personal only
+//   dob?: string;
+//   address?: string;
+//   // business only
+//   businessName?: string;
+//   businessType?: 'SOLE_PROPRIETOR' | 'LLC' | 'CORPORATION' | 'PARTNERSHIP' | 'NON_PROFIT';
+//   taxId?: string;
+//   businessAddress?: string;
+//   businessStatus?: 'ACTIVE' | 'PENDING_VERIFICATION' | 'SUSPENDED';
+//   contactPhone?: string;
+//   website?: string;
+//   // linked bank
+//   bankAccount?: BankAccount;
+// }
 
 // ── Wallet ────────────────────────────────────────────────────
 export interface WalletBalance {
@@ -227,3 +227,5 @@ export interface PaymentTrend {
   incoming: number;
   outgoing: number;
 }
+
+export { UserProfile, BankAccountSummary } from './user.model';

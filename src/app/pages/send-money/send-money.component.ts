@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router } from '@angular/router';
 import { MoneyRequestService } from '../../core/services/money-request.service';
 import { UserService } from '../../core/services/user.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-send-money',
@@ -67,4 +68,8 @@ export class SendMoneyComponent implements OnInit {
   reset(): void { this.form.reset(); this.step = 'details'; this.error = ''; }
   goToDashboard(): void { this.router.navigate(['/dashboard']); }
   f(n: string) { return this.form.get(n); }
+
+  get pinControl(): FormControl {
+    return this.form.get('pin') as FormControl;
+  }
 }

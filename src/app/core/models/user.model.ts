@@ -8,25 +8,26 @@ export interface BankAccountSummary {
 
 export interface UserProfile {
   userId: number;
-  accountType: AccountType;
-  fullName: string;        // ← remove the ? — always present from /me response
-  email: string;           // ← same
+  fullName: string;
+  email: string;
   phone: string;
-  profileComplete: boolean;
+  accountType: 'PERSONAL' | 'BUSINESS';
   walletBalance: number;
-  createdAt: string;
-
-  // These are genuinely optional — only present based on account type
-  address?: string;
+  currency: string;
+  profileComplete: boolean;
+  // personal only
   dob?: string;
+  address?: string;
+  // business only
   businessName?: string;
-  businessType?: string;
+  businessType?: 'SOLE_PROPRIETOR' | 'LLC' | 'CORPORATION' | 'PARTNERSHIP' | 'NON_PROFIT';
   taxId?: string;
+  businessAddress?: string;
+  businessStatus?: 'ACTIVE' | 'PENDING_VERIFICATION' | 'SUSPENDED';
   contactPhone?: string;
   website?: string;
-  businessStatus?: string;
-
-  bankAccount?: BankAccountSummary;  // ← stays optional, handled with *ngIf as bank
+  // linked bank
+  bankAccount?: BankAccountSummary;
 }
 
 export interface ApiResponse<T> {

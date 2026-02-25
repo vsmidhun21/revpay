@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MoneyRequestService } from '../../core/services/money-request.service';
 import { MoneyRequest } from '../../core/models';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-requests',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './requests.component.html',
   styleUrls: ['./requests.component.scss'],
 })
