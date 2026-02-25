@@ -443,3 +443,62 @@ $success: #22c55e;
   flex-shrink: 0;
   margin-top: 5px;
 }
+
+// ── Loading overlay ───────────────────────────────────────────
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: #050810;
+  display: grid;
+  place-items: center;
+  z-index: 999;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(79, 142, 247, 0.2);
+  border-top-color: #4f8ef7;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// ── Business pending verification banner ─────────────────────
+.banner-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(#f59e0b, 0.08);
+  border: 1px solid rgba(#f59e0b, 0.25);
+  border-radius: 12px;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.88rem;
+  color: #fcd34d;
+  margin-bottom: 0.5rem;
+
+  .banner-icon { font-size: 1rem; flex-shrink: 0; }
+
+  strong { color: #fbbf24; }
+}
+
+// ── Sidebar divider between personal and business nav items ──
+.nav-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin: 0.5rem 0;
+}
+
+// ── Bank meta icon ────────────────────────────────────────────
+.meta-icon.bank { color: #a78bfa; }
+
+.logout-spinner {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  border-top-color: #ef4444;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
