@@ -1,0 +1,75 @@
+<div class="page-layout centered">
+  <div class="send-card">
+
+    <!-- Step: Details -->
+    <div *ngIf="step === 'details'">
+      <div class="send-header">
+        <h1>Send Money</h1>
+        <div class="balance-chip">Balance: ₹{{ walletBalance | number:'1.2-2' }}</div>
+      </div>
+      <form [formGroup]="form">
+        <div class="alert error" *ngIf="error">{{ error }}</div>
+        <div class="form-group">
+          <label>Send To</label>
+          <input type="text" formControlName="recipient"
+            placeholder="Email, phone, username or account ID"/>
+          <span class="field-error" *ngIf="f('recipient')?.touched && f('recipient')?.invalid">Required</span>
+        </div>
+        <div class="form-group">
+          <label>Amount (₹)</label>
+          <div class="amount-input-wrap">
+            <span class="currency-prefix">₹</span>
+            <input type="number" formControlName="amount" placeholder="0.00"/>
+          </div>
+          <span class="field-error" *ngIf="f('amount')?.touched && f('amount')?.invalid">Enter a valid amount</span>
+        </div>
+        <div class="form-group">
+          <label>Note <span class="optional">(optional)</span></label>
+          <input type="text" formControlName="note" placeholder="Dinner, rent split…"/>
+        </div>
+        <button class="btn-primary full" (click)="goToConfirm()">Continue →</button>
+      </form>
+    </div>
+
+    <!-- Step: Confirm -->
+    <div *ngIf="step === 'confirm'">
+      <div class="send-header">
+        <button class="back-btn" (click)="step='details'">← Back</button>
+        <h1>Confirm Transfer</h1>
+      </div>
+      <div class="confirm-card">
+        <div class="confirm-row"><span>To</span><strong>{{ form.value.recipient }}</strong></div>
+        <div class="confirm-row"><span>Amount</span><strong class="big-amount">₹{{ form.value.amount | number:'1.2-2' }}</strong></div>
+        <div class="confirm-row" *ngIf="form.value.note"><span>Note</span><span>{{ form.value.note }}</span></div>
+        <div class="confirm-row"><span>Balance After</span><span>₹{{ (walletBalance - form.value.amount) | number:'1.2-2' }}</span></div>
+      </div>
+      <div class="form-group">
+        <label>Transaction PIN</label>
+        <div class="pin-input-wrap">
+          <input [type]="showPin ? 'text' : 'password'" [formControl]="form.get('pin')!"
+            placeholder="••••" maxlength="6"/>
+          <button type="button" class="pin-toggle" (click)="showPin = !showPin">
+            {{ showPin ? '🙈' : '👁' }}
+          </button>
+        </div>
+        <span class="field-error" *ngIf="f('pin')?.touched && f('pin')?.invalid">Enter your 4–6 digit PIN</span>
+      </div>
+      <div class="alert error" *ngIf="error">{{ error }}</div>
+      <button class="btn-primary full" (click)="send()" [disabled]="loading">
+        {{ loading ? 'Processing…' : 'Send Money' }}
+      </button>
+    </div>
+
+    <!-- Step: Success -->
+    <div class="success-screen" *ngIf="step === 'success'">
+      <div class="success-icon">✅</div>
+      <h2>Money Sent!</h2>
+      <p>Your transfer to <strong>{{ form.value.recipient }}</strong> was successful.</p>
+      <div class="success-amount">₹{{ form.value.amount | number:'1.2-2' }}</div>
+      <div class="success-actions">
+        <button class="btn-outline" (click)="reset()">Send Again</button>
+        <button class="btn-primary" (click)="goToDashboard()">Go to Dashboard</button>
+      </div>
+    </div>
+  </div>
+</div>
