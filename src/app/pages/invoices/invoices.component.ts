@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { InvoiceService } from '../../core/services/invoice.service';
 import { Invoice, InvoiceStatus, InvoiceSummary, InvoiceLineItem } from '../../core/models';
+import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-invoices',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmModalComponent],
   templateUrl: './invoices.component.html',
   styleUrls: ['./invoices.component.scss'],
 })
@@ -23,6 +24,14 @@ export class InvoicesComponent implements OnInit {
   successMsg = '';
   activeFilter: InvoiceStatus | '' = '';
 
+  confirmVisible  = false;
+  confirmTitle    = '';
+  confirmMessage  = '';
+  confirmIcon     = '⚠';
+  confirmOkLabel  = 'Confirm';
+  confirmOkClass: 'danger' | 'primary' = 'primary';
+  private confirmCallback: (() => void) | null = null;
+
   createForm: FormGroup;
 
   statusOptions: Array<{ label: string; value: InvoiceStatus | '' }> = [
@@ -36,12 +45,14 @@ export class InvoicesComponent implements OnInit {
 
   constructor(private invoiceService: InvoiceService, private fb: FormBuilder) {
     this.createForm = this.fb.group({
-      customerName:    ['', Validators.required],
-      customerEmail:   ['', [Validators.required, Validators.email]],
-      customerAddress: [''],
-      paymentTerms:    ['NET_30'],
-      dueDate:         ['', Validators.required],
-      notes:           [''],
+      customer: this.fb.group({
+        name:    ['', Validators.required],
+        email:   ['', [Validators.required, Validators.email]],
+        address: [''],
+      }),
+      paymentTerms: ['NET_30'],
+      dueDate:      ['', Validators.required],
+      notes:        [''],
       lineItems: this.fb.array([this.newLineItem()]),
     });
   }
@@ -121,26 +132,45 @@ export class InvoicesComponent implements OnInit {
   closeDetail(): void { this.showDetailModal = false; this.selectedInvoice = null; }
 
   sendInvoice(inv: Invoice): void {
-    this.invoiceService.send(inv.id).subscribe({
-      next: () => { this.successMsg = 'Invoice sent!'; this.load(); this.loadSummary(); setTimeout(() => this.successMsg = '', 3000); },
-      error: (err) => { this.error = err.error?.message ?? 'Failed.'; },
-    });
+    this.showConfirm(
+      'Send Invoice',
+      `Send invoice to ${inv.customer?.email ?? inv.customerEmail}? They will receive a notification.`,
+      '📤', 'Send Invoice', 'primary',
+      () => {
+        this.invoiceService.send(inv.id).subscribe({
+          next: () => { this.successMsg = 'Invoice sent!'; this.load(); this.loadSummary(); setTimeout(() => this.successMsg = '', 3000); },
+          error: (err) => { this.error = err.error?.message ?? 'Failed to send.'; },
+        });
+      }
+    );
   }
 
   markPaid(inv: Invoice): void {
-    if (!confirm('Mark this invoice as paid?')) return;
-    this.invoiceService.markPaid(inv.id).subscribe({
-      next: () => { this.successMsg = 'Invoice marked as paid!'; this.load(); this.loadSummary(); setTimeout(() => this.successMsg = '', 3000); },
-      error: (err) => { this.error = err.error?.message ?? 'Failed.'; },
-    });
+    this.showConfirm(
+      'Mark as Paid',
+      `Mark invoice #${inv.id} as paid? This action confirms payment of ₹${inv.totalAmount.toFixed(2)}.`,
+      '✅', 'Mark as Paid', 'primary',
+      () => {
+        this.invoiceService.markPaid(inv.id).subscribe({
+          next: () => { this.successMsg = 'Invoice marked as paid!'; this.load(); this.loadSummary(); setTimeout(() => this.successMsg = '', 3000); },
+          error: (err) => { this.error = err.error?.message ?? 'Failed.'; },
+        });
+      }
+    );
   }
 
   cancelInvoice(inv: Invoice): void {
-    if (!confirm('Cancel this invoice?')) return;
-    this.invoiceService.cancel(inv.id).subscribe({
-      next: () => { this.successMsg = 'Invoice cancelled.'; this.load(); this.loadSummary(); setTimeout(() => this.successMsg = '', 3000); },
-      error: (err) => { this.error = err.error?.message ?? 'Failed.'; },
-    });
+    this.showConfirm(
+      'Cancel Invoice',
+      `Cancel invoice #${inv.id}? This cannot be undone.`,
+      '🗑', 'Cancel Invoice', 'danger',
+      () => {
+        this.invoiceService.cancel(inv.id).subscribe({
+          next: () => { this.successMsg = 'Invoice cancelled.'; this.load(); this.loadSummary(); setTimeout(() => this.successMsg = '', 3000); },
+          error: (err) => { this.error = err.error?.message ?? 'Failed.'; },
+        });
+      }
+    );
   }
 
   statusColor(status: InvoiceStatus): string {
@@ -151,4 +181,31 @@ export class InvoicesComponent implements OnInit {
   }
 
   cf(n: string) { return this.createForm.get(n); }
+
+  private showConfirm(
+    title: string, message: string, icon: string,
+    okLabel: string, okClass: 'danger' | 'primary',
+    callback: () => void
+  ): void {
+    this.confirmTitle    = title;
+    this.confirmMessage  = message;
+    this.confirmIcon     = icon;
+    this.confirmOkLabel  = okLabel;
+    this.confirmOkClass  = okClass;
+    this.confirmCallback = callback;
+    this.confirmVisible  = true;
+  }
+
+  onConfirmOk(): void {
+    this.confirmVisible = false;
+    this.confirmCallback?.();
+    this.confirmCallback = null;
+  }
+
+  onConfirmCancel(): void {
+    this.confirmVisible = false;
+    this.confirmCallback = null;
+  }
+
+  
 }

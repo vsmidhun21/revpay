@@ -54,12 +54,15 @@ export class LoansComponent implements OnInit {
   ngOnInit(): void { this.load(); }
 
   load(): void {
-    this.loading = true;
-    this.loanService.getAll().subscribe({
-      next: (res) => { this.loans = res.data ?? []; this.loading = false; },
-      error: () => { this.loading = false; },
-    });
-  }
+  this.loading = true;
+  this.loanService.getAll().subscribe({
+    next: (res) => {
+      this.loans = res.data?.content ?? [];
+      this.loading = false;
+    },
+    error: () => { this.loading = false; },
+  });
+}
 
   openApply(): void { this.applyForm.reset({ tenureMonths: 12 }); this.showApplyModal = true; }
   closeApply(): void { this.showApplyModal = false; this.error = ''; }

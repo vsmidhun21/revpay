@@ -113,8 +113,9 @@ export interface InvoiceLineItem {
 
 export interface Invoice {
   id: number;
-  customerName: string;
-  customerEmail: string;
+  customer?: { name: string; email: string; address?: string };
+  customerName?: string;
+  customerEmail?: string;
   customerAddress?: string;
   lineItems: InvoiceLineItem[];
   paymentTerms?: 'NET_7' | 'NET_15' | 'NET_30' | 'NET_60';

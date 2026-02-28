@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { UserProfile } from '../../core/models';
 
 @Component({
@@ -15,18 +16,27 @@ import { UserProfile } from '../../core/models';
 export class ShellComponent implements OnInit {
   profile: UserProfile | null = null;
   loggingOut = false;
-  sidebarOpen = false; // for mobile
+  sidebarOpen = false;
+  unreadCount = 0;            // ← was hardcoded 3, now live
 
   constructor(
     private userService: UserService,
     private authService: AuthService,
+    private notifService: NotificationService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.userService.getProfile().subscribe({
       next: (res) => { this.profile = res.data ?? null; },
-      error: () => { this.router.navigate(['/login']); },
+      error: () => this.router.navigate(['/login']),
+    });
+
+    // Load real unread count
+    this.notifService.getAll().subscribe({
+      next: (res) => {
+        this.unreadCount = (res.data ?? []).filter(n => !n.isRead).length;
+      },
     });
   }
 
@@ -37,15 +47,9 @@ export class ShellComponent implements OnInit {
     return '?';
   }
 
-  get firstName(): string {
-    return (this.profile?.fullName || '').split(' ')[0] || '';
-  }
-
   get isBusinessAccount(): boolean {
     return this.profile?.accountType === 'BUSINESS';
   }
-
-  get unreadCount(): number { return 3; } // wire up NotificationService later
 
   toggleSidebar(): void { this.sidebarOpen = !this.sidebarOpen; }
 

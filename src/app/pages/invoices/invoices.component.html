@@ -8,7 +8,7 @@
   </div>
 
   <div class="alert success" *ngIf="successMsg">{{ successMsg }}</div>
-  <div class="alert error"   *ngIf="error">{{ error }}</div>
+  <div class="alert error" *ngIf="error">{{ error }}</div>
 
   <!-- Summary cards -->
   <div class="summary-grid" *ngIf="summary">
@@ -34,18 +34,20 @@
 
   <!-- Status filter -->
   <div class="filter-tabs">
-    <button class="filter-tab" *ngFor="let opt of statusOptions"
-      [class.active]="activeFilter === opt.value"
+    <button class="filter-tab" *ngFor="let opt of statusOptions" [class.active]="activeFilter === opt.value"
       (click)="filterBy(opt.value)">{{ opt.label }}</button>
   </div>
 
   <!-- Loading -->
-  <div class="loading-row" *ngIf="loading"><div class="spinner"></div></div>
+  <div class="loading-row" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
 
   <!-- Invoice list -->
   <div *ngIf="!loading">
     <div class="empty-state" *ngIf="invoices.length === 0">
-      <span class="empty-icon">🧾</span><p>No invoices found.</p>
+      <span class="empty-icon">🧾</span>
+      <p>No invoices found.</p>
       <button class="btn-primary" (click)="openCreate()">Create your first invoice</button>
     </div>
 
@@ -64,7 +66,8 @@
           <button class="action-link" (click)="openDetail(inv)">View</button>
           <button class="action-link" *ngIf="inv.status === 'DRAFT'" (click)="sendInvoice(inv)">Send</button>
           <button class="action-link" *ngIf="inv.status === 'SENT'" (click)="markPaid(inv)">Mark Paid</button>
-          <button class="action-link danger" *ngIf="inv.status !== 'PAID' && inv.status !== 'CANCELLED'" (click)="cancelInvoice(inv)">Cancel</button>
+          <button class="action-link danger" *ngIf="inv.status !== 'PAID' && inv.status !== 'CANCELLED'"
+            (click)="cancelInvoice(inv)">Cancel</button>
         </div>
       </div>
     </div>
@@ -81,21 +84,29 @@
         <div class="alert error" *ngIf="error">{{ error }}</div>
 
         <div class="modal-section-title">Customer Details</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Customer Name</label>
-            <input type="text" formControlName="customerName"/>
-            <span class="field-error" *ngIf="cf('customerName')?.touched && cf('customerName')?.invalid">Required</span>
+        <div formGroupName="customer">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Customer Name</label>
+              <input type="text" formControlName="name" />
+              <span class="field-error"
+                *ngIf="createForm.get('customer.name')?.touched && createForm.get('customer.name')?.invalid">
+                Required
+              </span>
+            </div>
+            <div class="form-group">
+              <label>Customer Email</label>
+              <input type="email" formControlName="email" />
+              <span class="field-error"
+                *ngIf="createForm.get('customer.email')?.touched && createForm.get('customer.email')?.invalid">
+                Valid email required
+              </span>
+            </div>
           </div>
           <div class="form-group">
-            <label>Customer Email</label>
-            <input type="email" formControlName="customerEmail"/>
-            <span class="field-error" *ngIf="cf('customerEmail')?.touched && cf('customerEmail')?.invalid">Valid email required</span>
+            <label>Customer Address <span class="optional">(optional)</span></label>
+            <textarea formControlName="address" rows="2"></textarea>
           </div>
-        </div>
-        <div class="form-group">
-          <label>Customer Address <span class="optional">(optional)</span></label>
-          <textarea formControlName="customerAddress" rows="2"></textarea>
         </div>
 
         <div class="modal-section-title">Invoice Settings</div>
@@ -111,7 +122,7 @@
           </div>
           <div class="form-group">
             <label>Due Date</label>
-            <input type="date" formControlName="dueDate"/>
+            <input type="date" formControlName="dueDate" />
             <span class="field-error" *ngIf="cf('dueDate')?.touched && cf('dueDate')?.invalid">Required</span>
           </div>
         </div>
@@ -121,19 +132,19 @@
           <div class="line-item-row" *ngFor="let item of lineItems.controls; let i = index" [formGroupName]="i">
             <div class="form-group flex-3">
               <label *ngIf="i === 0">Description</label>
-              <input type="text" formControlName="description" placeholder="Service or product"/>
+              <input type="text" formControlName="description" placeholder="Service or product" />
             </div>
             <div class="form-group flex-1">
               <label *ngIf="i === 0">Qty</label>
-              <input type="number" formControlName="quantity" min="1"/>
+              <input type="number" formControlName="quantity" min="1" />
             </div>
             <div class="form-group flex-1">
               <label *ngIf="i === 0">Unit Price</label>
-              <input type="number" formControlName="unitPrice" placeholder="0.00" min="0"/>
+              <input type="number" formControlName="unitPrice" placeholder="0.00" min="0" />
             </div>
             <div class="form-group flex-1">
               <label *ngIf="i === 0">Tax %</label>
-              <input type="number" formControlName="taxRate" placeholder="18" min="0" max="100"/>
+              <input type="number" formControlName="taxRate" placeholder="18" min="0" max="100" />
             </div>
             <div class="form-group flex-1">
               <label *ngIf="i === 0">Total</label>
@@ -173,13 +184,33 @@
         <button class="close-btn" (click)="closeDetail()">✕</button>
       </div>
       <div class="modal-body">
-        <div class="detail-row"><span class="dl">Customer</span><span class="dv">{{ selectedInvoice.customerName }}</span></div>
-        <div class="detail-row"><span class="dl">Email</span><span class="dv">{{ selectedInvoice.customerEmail }}</span></div>
-        <div class="detail-row"><span class="dl">Status</span><span class="status-pill" [class]="statusColor(selectedInvoice.status)">{{ selectedInvoice.status }}</span></div>
-        <div class="detail-row"><span class="dl">Due Date</span><span class="dv">{{ selectedInvoice.dueDate | date:'dd MMM y' }}</span></div>
-        <div class="detail-row"><span class="dl">Total</span><span class="dv big-amount">₹{{ selectedInvoice.totalAmount | number:'1.2-2' }}</span></div>
+        <div class="detail-row">
+          <span class="dl">Customer</span>
+          <span class="dv">{{ selectedInvoice.customer?.name ?? selectedInvoice.customerName }}</span></div>
+        <div class="detail-row">
+          <span class="dl">Email</span>
+          <span class="dv">{{ selectedInvoice.customer?.email ?? selectedInvoice.customerEmail }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="dl">Status</span>
+          <span class="status-pill"[class]="statusColor(selectedInvoice.status)">{{ selectedInvoice.status }}</span></div>
+        <div class="detail-row">
+          <span class="dl">Due Date</span>
+          <span class="dv">{{ selectedInvoice.dueDate | date:'dd MMM y' }}</span></div>
+        <div class="detail-row">
+          <span class="dl">Total</span>
+          <span class="dv big-amount">₹{{ selectedInvoice.totalAmount | number:'1.2-2' }}</span>
+        </div>
         <table class="mini-table" *ngIf="selectedInvoice.lineItems?.length">
-          <thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th>Tax</th><th>Total</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Tax</th>
+              <th>Total</th>
+            </tr>
+          </thead>
           <tbody>
             <tr *ngFor="let item of selectedInvoice.lineItems">
               <td>{{ item.description }}</td>
@@ -190,8 +221,22 @@
             </tr>
           </tbody>
         </table>
-        <div class="detail-row" *ngIf="selectedInvoice.notes"><span class="dl">Notes</span><span class="dv">{{ selectedInvoice.notes }}</span></div>
+        <div class="detail-row" *ngIf="selectedInvoice.notes"><span class="dl">Notes</span><span class="dv">{{
+            selectedInvoice.notes }}</span></div>
       </div>
     </div>
   </div>
+
+  <app-confirm-modal
+    [visible]="confirmVisible"
+    [title]="confirmTitle"
+    [message]="confirmMessage"
+    [icon]="confirmIcon"
+    [okLabel]="confirmOkLabel"
+    [okClass]="confirmOkClass"
+    (confirmed)="onConfirmOk()"
+    (cancelled)="onConfirmCancel()">
+  </app-confirm-modal>
+
+
 </div>

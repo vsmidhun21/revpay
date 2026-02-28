@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
-import { UserProfile } from '../../core/models';
+import { TransactionService } from '../../core/services/transaction.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { UserProfile, Transaction, Notification } from '../../core/models';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,89 +14,110 @@ import { UserProfile } from '../../core/models';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-
   profile: UserProfile | null = null;
+  transactions: Transaction[] = [];
+  notifications: Notification[] = [];
   loading = true;
 
   quickActions = [
     { icon: '↗', label: 'Send Money', color: '#4f8ef7', route: '/send-money'   },
     { icon: '↙', label: 'Request',    color: '#22c55e', route: '/requests'      },
-    { icon: '＋', label: 'Add Funds', color: '#a855f7', route: '/payment-methods'},
-    { icon: '↓',  label: 'Withdraw',  color: '#f97316', route: '/settings'      },
-  ];
-
-  transactions = [
-    { icon: '↙', type: 'received', name: 'Sarah Mitchell',   note: 'Rent split',       amount: +850.00,  date: 'Today, 2:14 PM'     },
-    { icon: '↗', type: 'sent',     name: 'Netflix',          note: 'Subscription',     amount: -15.99,   date: 'Today, 9:00 AM'     },
-    { icon: '↗', type: 'sent',     name: 'James Carter',     note: 'Lunch',            amount: -42.50,   date: 'Yesterday, 1:30 PM' },
-    { icon: '↙', type: 'received', name: 'Freelance Client', note: 'Invoice #INV-042', amount: +1200.00, date: 'Dec 18, 10:45 AM'   },
-    { icon: '＋', type: 'topup',   name: 'Wallet Top-up',   note: 'From Visa ••4291', amount: +500.00,  date: 'Dec 17, 4:00 PM'    },
-    { icon: '↗', type: 'sent',     name: 'Electricity Bill', note: 'December bill',    amount: -96.20,   date: 'Dec 16, 11:00 AM'   },
-  ];
-
-  notifications = [
-    { icon: '💰', message: 'You received ₹850 from Sarah Mitchell', time: '2 min ago', unread: true  },
-    { icon: '🔔', message: 'Your transaction PIN was changed',       time: '1 hr ago',  unread: true  },
-    { icon: '📩', message: 'Money request from James: ₹42.50',      time: '3 hrs ago', unread: false },
+    { icon: '＋', label: 'Add Funds', color: '#a855f7', route: '/add-funds'     },
+    { icon: '↓',  label: 'Withdraw',  color: '#f97316', route: '/withdraw'      },
   ];
 
   constructor(
     private userService: UserService,
+    private txnService: TransactionService,
+    private notifService: NotificationService,
     private router: Router,
   ) {
-    // Try to get profile from navigation state (passed from profile-init)
     const nav = this.router.getCurrentNavigation();
     const stateProfile = nav?.extras?.state?.['profile'];
     if (stateProfile) {
       this.profile = stateProfile;
-      this.loading = false;
     }
   }
 
   ngOnInit(): void {
-    if (this.profile) return;
+    if (!this.profile) {
+      this.userService.getProfile().subscribe({
+        next: (res) => { this.profile = res.data ?? null; },
+        error: () => this.router.navigate(['/login']),
+      });
+    }
 
-    this.userService.getProfile().subscribe({
+    // Load recent transactions (first 6)
+    this.txnService.getAll({ page: 0, size: 6 }).subscribe({
+      next: (res) => { this.transactions = res.data?.content ?? []; },
+    });
+
+    // Load recent notifications (first 5)
+    this.notifService.getAll().subscribe({
       next: (res) => {
-        this.profile = res.data ?? null;
+        this.notifications = (res.data ?? []).slice(0, 5);
         this.loading = false;
       },
-      error: () => {
-        this.loading = false;
-        this.router.navigate(['/login']);
-      },
+      error: () => { this.loading = false; },
     });
   }
-
-  // ── Helpers ──────────────────────────────────────────────────
 
   get firstName(): string {
     return (this.profile?.fullName || '').split(' ')[0] || 'there';
   }
 
   get greeting(): string {
-    const hour = new Date().getHours();
-    if (hour >= 5  && hour < 12) return 'Good morning';
-    if (hour >= 12 && hour < 17) return 'Good afternoon';
-    if (hour >= 17 && hour < 21) return 'Good evening';
+    const h = new Date().getHours();
+    if (h >= 5  && h < 12) return 'Good morning';
+    if (h >= 12 && h < 17) return 'Good afternoon';
+    if (h >= 17 && h < 21) return 'Good evening';
     return 'Good night';
   }
 
   get greetingEmoji(): string {
-    const hour = new Date().getHours();
-    if (hour >= 5  && hour < 12) return '☀️';
-    if (hour >= 12 && hour < 17) return '👋';
-    if (hour >= 17 && hour < 21) return '🌆';
+    const h = new Date().getHours();
+    if (h >= 5  && h < 12) return '☀️';
+    if (h >= 12 && h < 17) return '👋';
+    if (h >= 17 && h < 21) return '🌆';
     return '🌙';
   }
 
   get isBusinessPendingVerification(): boolean {
     return this.profile?.accountType === 'BUSINESS'
-      && this.profile?.businessStatus === 'PENDING_VERIFICATION';
+        && this.profile?.businessStatus === 'PENDING_VERIFICATION';
   }
 
+  get hasUnreadNotifications(): boolean {
+    return this.notifications.some(n => !n.isRead);
+  }
+
+  // Pending = sum of amounts in PENDING transactions
   get pendingAmount(): number {
-    // Replace with real API data when available
-    return 320.00;
+    return this.transactions
+      .filter(t => t.status === 'PENDING')
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+  }
+
+  txnIcon(type: string): string {
+    const m: Record<string, string> = {
+      SENT: '↗', RECEIVED: '↙', TOPUP: '＋', WITHDRAWAL: '↓', LOAN_REPAYMENT: '🏦',
+    };
+    return m[type] ?? '•';
+  }
+
+  txnTypeClass(type: string): string {
+    const m: Record<string, string> = {
+      SENT: 'sent', RECEIVED: 'received', TOPUP: 'topup',
+      WITHDRAWAL: 'withdrawal', LOAN_REPAYMENT: 'loan',
+    };
+    return m[type] ?? '';
+  }
+
+  notifIcon(type: string): string {
+    const m: Record<string, string> = {
+      TRANSACTION: '💸', MONEY_REQUEST: '📩', CARD_CHANGE: '💳',
+      LOW_BALANCE: '⚠', SECURITY: '🔒', INVOICE: '🧾', LOAN: '🏦',
+    };
+    return m[type] ?? '🔔';
   }
 }
