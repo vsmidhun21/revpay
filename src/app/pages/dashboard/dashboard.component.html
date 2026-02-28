@@ -97,8 +97,8 @@
         <div class="txn-item" *ngFor="let t of transactions">
           <div class="txn-icon-wrap" [class]="txnTypeClass(t.type)">{{ txnIcon(t.type) }}</div>
           <div class="txn-info">
-            <div class="txn-name">{{ t.counterparty?.name ?? t.type }}</div>
-            <div class="txn-note">{{ t.note ?? '—' }}</div>
+            <div class="txn-name">{{ t.counterparty?.fullName ?? t.type }}</div>
+            <div class="txn-note">{{ t.note || '—' }}</div>
           </div>
           <div class="txn-right">
             <div class="txn-amount"

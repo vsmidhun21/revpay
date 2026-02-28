@@ -1,127 +1,160 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { TransactionService } from '../../core/services/transaction.service';
-import { Transaction, TransactionFilters, TransactionType, TransactionStatus } from '../../core/models';
+import { TransactionService, TransactionFilters } from '../../core/services/transaction.service';
+import { Transaction, TransactionPagination } from '../../core/models';
 
 @Component({
   selector: 'app-transactions',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.scss'],
 })
 export class TransactionsComponent implements OnInit {
   transactions: Transaction[] = [];
-  loading = true;
-  exporting = false;
-  error = '';
+  pagination: TransactionPagination = {
+    currentPage: 0, pageSize: 10, totalRecords: 0,
+    totalPages: 0, hasNext: false, hasPrevious: false,
+  };
 
-  // Pagination
-  currentPage = 0;
-  totalPages = 0;
-  totalElements = 0;
-  pageSize = 10;
+  loading  = false;
+  exporting: 'CSV' | 'PDF' | null = null;
 
-  // Filters
-  filters: TransactionFilters = { page: 0, size: 10 };
-  searchTerm = '';
-  selectedType: TransactionType | '' = '';
-  selectedStatus: TransactionStatus | '' = '';
-  dateFrom = '';
-  dateTo = '';
-
-  // Detail modal
   selectedTransaction: Transaction | null = null;
+  showDetail = false;
+
+  // Filters (bound via ngModel)
+  search    = '';
+  typeFilter   = 'ALL';
+  statusFilter = 'ALL';
+  dateFrom  = '';
+  dateTo    = '';
+
+  typeOptions = [
+    { value: 'ALL',          label: 'All Types' },
+    { value: 'SEND',         label: 'Sent' },
+    { value: 'RECEIVE',      label: 'Received' },
+    { value: 'TOPUP',        label: 'Top-Up' },
+    { value: 'WITHDRAWAL',   label: 'Withdrawal' },
+    { value: 'LOAN_REPAYMENT', label: 'Loan Repayment' },
+  ];
+
+  statusOptions = [
+    { value: 'ALL',       label: 'All Statuses' },
+    { value: 'SUCCESS',   label: 'Success' },
+    { value: 'PENDING',   label: 'Pending' },
+    { value: 'FAILED',    label: 'Failed' },
+    { value: 'CANCELLED', label: 'Cancelled' },
+  ];
 
   constructor(private txnService: TransactionService) {}
 
-  ngOnInit(): void {
-    this.load();
-  }
+  ngOnInit(): void { this.load(); }
 
-  load(): void {
+  load(page = 0): void {
     this.loading = true;
-    this.error = '';
-
     const filters: TransactionFilters = {
-      page: this.currentPage,
-      size: this.pageSize,
-      ...(this.searchTerm    && { search: this.searchTerm }),
-      ...(this.selectedType  && { type: this.selectedType as TransactionType }),
-      ...(this.selectedStatus && { status: this.selectedStatus as TransactionStatus }),
-      ...(this.dateFrom      && { from: this.dateFrom }),
-      ...(this.dateTo        && { to: this.dateTo }),
+      page, size: 10,
+      search:   this.search     || undefined,
+      type:     this.typeFilter   !== 'ALL' ? this.typeFilter   : undefined,
+      status:   this.statusFilter !== 'ALL' ? this.statusFilter : undefined,
+      from:     this.dateFrom   || undefined,
+      to:       this.dateTo     || undefined,
     };
 
     this.txnService.getAll(filters).subscribe({
       next: (res) => {
-        this.transactions = res.data?.content ?? [];
-        this.totalPages = res.data?.totalPages ?? 0;
-        this.totalElements = res.data?.totalElements ?? 0;
-        this.loading = false;
+        // API returns: { success, data: Transaction[], pagination: {...} }
+        this.transactions = res.data ?? [];
+        this.pagination   = res.pagination ?? this.pagination;
+        this.loading      = false;
       },
-      error: () => {
-        this.error = 'Failed to load transactions.';
-        this.loading = false;
-      },
+      error: () => { this.loading = false; },
     });
   }
 
-  applyFilters(): void {
-    this.currentPage = 0;
-    this.load();
-  }
+  applyFilters(): void { this.load(0); }
 
   clearFilters(): void {
-    this.searchTerm = '';
-    this.selectedType = '';
-    this.selectedStatus = '';
-    this.dateFrom = '';
-    this.dateTo = '';
-    this.currentPage = 0;
-    this.load();
+    this.search = ''; this.typeFilter = 'ALL'; this.statusFilter = 'ALL';
+    this.dateFrom = ''; this.dateTo = '';
+    this.load(0);
   }
 
   goToPage(page: number): void {
-    if (page < 0 || page >= this.totalPages) return;
-    this.currentPage = page;
-    this.load();
+    if (page < 0 || page >= this.pagination.totalPages) return;
+    this.load(page);
+  }
+
+  get pageArray(): number[] {
+    return Array.from({ length: this.pagination.totalPages }, (_, i) => i);
   }
 
   openDetail(t: Transaction): void {
     this.selectedTransaction = t;
+    this.showDetail = true;
   }
 
-  closeDetail(): void {
-    this.selectedTransaction = null;
-  }
+  closeDetail(): void { this.showDetail = false; this.selectedTransaction = null; }
 
   exportFile(format: 'CSV' | 'PDF'): void {
-    this.exporting = true;
+    this.exporting = format;
     this.txnService.export(format).subscribe({
       next: (blob) => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `revpay-transactions.${format.toLowerCase()}`;
-        a.click();
+        const url  = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href  = url;
+        link.download = `revpay-transactions.${format.toLowerCase()}`;
+        link.click();
         URL.revokeObjectURL(url);
-        this.exporting = false;
+        this.exporting = null;
       },
-      error: () => { this.exporting = false; },
+      error: () => { this.exporting = null; },
     });
   }
 
-  typeIcon(type: string): string {
-    const icons: Record<string, string> = {
-      SENT: '↗', RECEIVED: '↙', ADD_MONEY: '＋', WITHDRAWAL: '↓', LOAN_REPAYMENT: '🏦',
+  // ── Display helpers ────────────────────────────────────────
+
+  txnIcon(type: string): string {
+    const m: Record<string, string> = {
+      SEND: '↗', RECEIVE: '↙', TOPUP: '＋', WITHDRAWAL: '↓', LOAN_REPAYMENT: '🏦',
     };
-    return icons[type] ?? '•';
+    return m[type] ?? '•';
   }
 
-  pageArray(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i);
+  txnClass(type: string): string {
+    const m: Record<string, string> = {
+      SEND: 'sent', RECEIVE: 'received', TOPUP: 'topup',
+      WITHDRAWAL: 'withdrawal', LOAN_REPAYMENT: 'loan',
+    };
+    return m[type] ?? '';
+  }
+
+  txnLabel(type: string): string {
+    const m: Record<string, string> = {
+      SEND: 'Sent', RECEIVE: 'Received', TOPUP: 'Top-Up',
+      WITHDRAWAL: 'Withdrawal', LOAN_REPAYMENT: 'Loan Repayment',
+    };
+    return m[type] ?? type;
+  }
+
+  statusClass(status: string): string {
+    const m: Record<string, string> = {
+      SUCCESS: 'completed', PENDING: 'pending',
+      FAILED: 'failed', CANCELLED: 'failed',
+    };
+    return m[status] ?? '';
+  }
+
+  // Amount sign: SEND and WITHDRAWAL are negative for display
+  displayAmount(t: Transaction): number {
+    return ['SEND', 'WITHDRAWAL', 'LOAN_REPAYMENT'].includes(t.type)
+      ? -Math.abs(t.amount)
+      : Math.abs(t.amount);
+  }
+
+  counterpartyName(t: Transaction): string {
+    return t.counterparty?.fullName ?? '—';
   }
 }

@@ -37,34 +37,41 @@ export interface PaymentCard {
 }
 
 // ── Transaction ───────────────────────────────────────────────
-export type TransactionType = 'SENT' | 'RECEIVED' | 'TOPUP' | 'WITHDRAWAL' | 'LOAN_REPAYMENT';
-export type TransactionStatus = 'COMPLETED' | 'PENDING' | 'FAILED' | 'CANCELLED';
+export type TransactionType   = 'SEND' | 'RECEIVE' | 'TOPUP' | 'WITHDRAWAL' | 'LOAN_REPAYMENT';
+export type TransactionStatus = 'SUCCESS' | 'PENDING' | 'FAILED' | 'CANCELLED';
 
-export interface Transaction {
-  transactionId: string;
-  type: TransactionType;
-  status: TransactionStatus;
-  amount: number;
-  currency: string;
-  note?: string;
-  counterparty?: {
-    name: string;
-    email: string;
-  };
-  balanceAfter: number;
-  createdAt: string;
-  completedAt?: string;
-  moneyRequestId?: number;
+export interface TransactionCounterparty {
+  userId:   number;
+  fullName: string;
+  email:    string;
 }
 
-export interface TransactionFilters {
-  page?: number;
-  size?: number;
-  type?: TransactionType;
-  status?: TransactionStatus;
-  from?: string;
-  to?: string;
-  search?: string;
+export interface Transaction {
+  transactionId: number;   // API field name
+  type:          TransactionType;
+  status:        TransactionStatus;
+  amount:        number;
+  currency:      string;
+  note?:         string;
+  counterparty?: TransactionCounterparty;
+  balanceAfter?: number;
+  createdAt:     string;
+  completedAt?:  string;
+}
+
+export interface TransactionPagination {
+  currentPage:  number;
+  pageSize:     number;
+  totalRecords: number;
+  totalPages:   number;
+  hasNext:      boolean;
+  hasPrevious:  boolean;
+}
+
+export interface TransactionListResponse {
+  success:    boolean;
+  data:       Transaction[];
+  pagination: TransactionPagination;
 }
 
 // ── Money Request ─────────────────────────────────────────────

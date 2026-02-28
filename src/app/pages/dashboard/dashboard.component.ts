@@ -49,7 +49,9 @@ export class DashboardComponent implements OnInit {
 
     // Load recent transactions (first 6)
     this.txnService.getAll({ page: 0, size: 6 }).subscribe({
-      next: (res) => { this.transactions = res.data?.content ?? []; },
+      next: (res) => {
+        this.transactions = res.data ?? [];
+      },
     });
 
     // Load recent notifications (first 5)
@@ -100,14 +102,14 @@ export class DashboardComponent implements OnInit {
 
   txnIcon(type: string): string {
     const m: Record<string, string> = {
-      SENT: '↗', RECEIVED: '↙', TOPUP: '＋', WITHDRAWAL: '↓', LOAN_REPAYMENT: '🏦',
+      SEND: '↗', RECEIVE: '↙', TOPUP: '＋', WITHDRAWAL: '↓', LOAN_REPAYMENT: '🏦',
     };
     return m[type] ?? '•';
   }
 
   txnTypeClass(type: string): string {
     const m: Record<string, string> = {
-      SENT: 'sent', RECEIVED: 'received', TOPUP: 'topup',
+      SEND: 'sent', RECEIVE: 'received', TOPUP: 'topup',
       WITHDRAWAL: 'withdrawal', LOAN_REPAYMENT: 'loan',
     };
     return m[type] ?? '';
