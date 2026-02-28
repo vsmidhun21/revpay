@@ -4,11 +4,12 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { MoneyRequestService } from '../../core/services/money-request.service';
 import { MoneyRequest } from '../../core/models';
 import { FormsModule } from '@angular/forms';
+import { ConfirmModalComponent } from "../../shared/confirm-modal/confirm-modal.component";
 
 @Component({
   selector: 'app-requests',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ConfirmModalComponent],
   templateUrl: './requests.component.html',
   styleUrls: ['./requests.component.scss'],
 })
@@ -25,6 +26,18 @@ export class RequestsComponent implements OnInit {
 
   requestForm: FormGroup;
   submitting = false;
+
+  // ── Confirm modal ─────────────────────────────────────────
+  confirmVisible  = false;
+  confirmTitle    = '';
+  confirmMessage  = '';
+  confirmIcon     = '⚠';
+  confirmOkLabel  = 'Confirm';
+  confirmOkClass: 'danger' | 'primary' = 'danger';
+  private confirmCallback: (() => void) | null = null;
+
+  // Track which row action is in progress (to show spinner per row)
+  busyId: number | null = null;
 
   constructor(private reqService: MoneyRequestService, private fb: FormBuilder) {
     this.requestForm = this.fb.group({
@@ -66,14 +79,20 @@ export class RequestsComponent implements OnInit {
     });
   }
 
-  decline(req: MoneyRequest): void {
-    if (!confirm('Decline this request?')) return;
-    this.actionLoading = req.requestId;
-    this.reqService.decline(req.requestId).subscribe({
-      next: () => { this.actionLoading = null; this.loadAll(); },
-      error: () => { this.actionLoading = null; },
-    });
-  }
+    decline(req: MoneyRequest): void {
+      this.showConfirm(
+        'Decline Request',
+        `Decline the ₹${req.amount.toFixed(2)} request from ${req.from?.name ?? 'user'}?`,
+        '✋', 'Decline', 'danger',
+        () => {
+          this.busyId = req.requestId;
+          this.reqService.decline(req.requestId).subscribe({
+            next:  () => { this.busyId = null; this.loadAll(); },
+            error: () => { this.busyId = null; },
+          });
+        }
+      );
+    }
 
   cancel(req: MoneyRequest): void {
     if (!confirm('Cancel this request?')) return;
@@ -102,4 +121,47 @@ export class RequestsComponent implements OnInit {
 
   pendingIncoming(): MoneyRequest[] { return this.incoming.filter(r => r.status === 'PENDING'); }
   f(n: string) { return this.requestForm.get(n); }
+
+  // ── Confirm modal helpers ─────────────────────────────────
+
+  private showConfirm(
+    title: string, message: string, icon: string,
+    okLabel: string, okClass: 'danger' | 'primary',
+    callback: () => void,
+  ): void {
+    this.confirmTitle    = title;
+    this.confirmMessage  = message;
+    this.confirmIcon     = icon;
+    this.confirmOkLabel  = okLabel;
+    this.confirmOkClass  = okClass;
+    this.confirmCallback = callback;
+    this.confirmVisible  = true;
+  }
+
+  onConfirmOk(): void {
+    this.confirmVisible = false;
+    this.confirmCallback?.();
+    this.confirmCallback = null;
+  }
+
+  onConfirmCancel(): void {
+    this.confirmVisible  = false;
+    this.confirmCallback = null;
+  }
+
+  // ── Template helpers ──────────────────────────────────────
+
+  rf(name: string) { return this.requestForm.get(name); }
+
+  statusClass(status: string): string {
+    const m: Record<string, string> = {
+      PENDING:   'pending',
+      ACCEPTED:  'completed',
+      DECLINED:  'failed',
+      CANCELLED: 'failed',
+      EXPIRED:   'failed',
+    };
+    return m[status] ?? '';
+  }
+
 }

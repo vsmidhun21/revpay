@@ -1116,3 +1116,208 @@ $bg:       #050810;
 .cust-email { font-size: 0.72rem; color: $muted; }
 .cust-vol { font-weight: 600; color: $text; white-space: nowrap; }
 .cust-count { font-size: 0.72rem; color: $muted; white-space: nowrap; }
+
+
+// Builds on top of the global shared.scss
+
+.request-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.request-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: #0d1117;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  transition: border-color 0.2s;
+
+  &:hover { border-color: rgba(255, 255, 255, 0.13); }
+}
+
+// Left side
+.req-info {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.req-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f8ef7, #7c3aed);
+  display: grid;
+  place-items: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.req-details { flex: 1; min-width: 0; }
+
+.req-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e8eaf0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.req-email {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.05rem;
+}
+
+.req-purpose {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+.req-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.req-date {
+  font-size: 0.72rem;
+  color: #6b7280;
+}
+
+.req-expires {
+  font-size: 0.72rem;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+  padding: 0.1rem 0.4rem;
+  border-radius: 100px;
+}
+
+// Right side
+.req-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.req-amount {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e8eaf0;
+}
+
+.req-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+// Small button variants
+.btn-primary.sm,
+.btn-danger.sm {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.btn-primary.sm {
+  background: linear-gradient(135deg, #4f8ef7, #3b7de8);
+  color: #fff;
+  &:hover:not(:disabled) { box-shadow: 0 4px 14px rgba(79, 142, 247, 0.35); }
+}
+
+.btn-danger.sm {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  &:hover:not(:disabled) { background: rgba(239, 68, 68, 0.18); }
+}
+
+// New request form card
+.new-req-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 520px;
+  background: #0d1117;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  padding: 1.75rem;
+}
+
+.form-card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.25rem;
+}
+
+.form-card-sub {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0 0 1.5rem;
+}
+
+// PIN modal desc
+.pin-modal-desc {
+  font-size: 0.88rem;
+  color: #9ca3af;
+  margin: 0 0 1.25rem;
+  line-height: 1.6;
+  strong { color: #e8eaf0; }
+}
+
+// Small inline spinner for row-level loading
+.spinner-sm {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+}
+
+
+// Responsive
+@media (max-width: 600px) {
+  .request-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .req-right {
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+}

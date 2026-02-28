@@ -114,3 +114,14 @@
     </div>
   </div>
 </div>
+
+<app-confirm-modal
+    [visible]="confirmVisible"
+    [title]="confirmTitle"
+    [message]="confirmMessage"
+    [icon]="confirmIcon"
+    [okLabel]="confirmOkLabel"
+    [okClass]="confirmOkClass"
+    (confirmed)="onConfirmOk()"
+    (cancelled)="onConfirmCancel()">
+  </app-confirm-modal>
