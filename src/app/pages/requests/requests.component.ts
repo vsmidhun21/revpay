@@ -95,12 +95,18 @@ export class RequestsComponent implements OnInit {
     }
 
   cancel(req: MoneyRequest): void {
-    if (!confirm('Cancel this request?')) return;
-    this.actionLoading = req.requestId;
-    this.reqService.cancel(req.requestId).subscribe({
-      next: () => { this.actionLoading = null; this.loadAll(); },
-      error: () => { this.actionLoading = null; },
-    });
+    this.showConfirm(
+      'Confirm Cancellation',
+      `Cancel the ₹${req.amount.toFixed(2)} request to ${req.to?.name ?? 'user'}?`,
+      '🛑', 'Cancel Request', 'primary',
+      () => { 
+        this.actionLoading = req.requestId;
+        this.reqService.cancel(req.requestId).subscribe({
+          next: () => { this.actionLoading = null; this.loadAll(); },
+          error: () => { this.actionLoading = null; },
+        });
+      }
+    );
   }
 
   submitRequest(): void {

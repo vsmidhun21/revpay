@@ -33,7 +33,7 @@
       <div class="card-actions">
         <button class="action-link" (click)="openEdit(card)">Edit</button>
         <button class="action-link" *ngIf="!card.isDefault" (click)="setDefault(card.cardId)">Set Default</button>
-        <button class="action-link danger" (click)="deleteCard(card.cardId)"
+        <button class="action-link danger" (click)="deleteCard(card.cardId, card.nickname)"
           [disabled]="deletingId === card.cardId">
           {{ deletingId === card.cardId ? '…' : 'Delete' }}
         </button>
@@ -120,3 +120,14 @@
     </div>
   </div>
 </div>
+
+<app-confirm-modal
+  [visible]="confirmVisible"
+  [title]="confirmTitle"
+  [message]="confirmMessage"
+  [icon]="confirmIcon"
+  [okLabel]="confirmOkLabel"
+  [okClass]="confirmOkClass"
+  (confirmed)="onConfirmOk()"
+  (cancelled)="onConfirmCancel()">
+</app-confirm-modal>

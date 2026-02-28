@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaymentMethodService } from '../../core/services/payment-method.service';
 import { PaymentCard } from '../../core/models';
+import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-payment-methods',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmModalComponent],
   templateUrl: './payment-methods.component.html',
   styleUrls: ['./payment-methods.component.scss'],
 })
@@ -24,6 +25,39 @@ export class PaymentMethodsComponent implements OnInit {
 
   addForm: FormGroup;
   editForm: FormGroup;
+
+  confirmVisible  = false;
+  confirmTitle    = '';
+  confirmMessage  = '';
+  confirmIcon     = '⚠';
+  confirmOkLabel  = 'Confirm';
+  confirmOkClass: 'danger' | 'primary' = 'danger';
+  private confirmCallback: (() => void) | null = null;
+
+  private showConfirm(
+    title: string, message: string, icon: string,
+    okLabel: string, okClass: 'danger' | 'primary',
+    callback: () => void
+  ): void {
+    this.confirmTitle    = title;
+    this.confirmMessage  = message;
+    this.confirmIcon     = icon;
+    this.confirmOkLabel  = okLabel;
+    this.confirmOkClass  = okClass;
+    this.confirmCallback = callback;
+    this.confirmVisible  = true;
+  }
+
+  onConfirmOk(): void {
+    this.confirmVisible = false;
+    this.confirmCallback?.();
+    this.confirmCallback = null;
+  }
+
+  onConfirmCancel(): void {
+    this.confirmVisible  = false;
+    this.confirmCallback = null;
+  }
 
   constructor(private pmService: PaymentMethodService, private fb: FormBuilder) {
     this.addForm = this.fb.group({
@@ -103,13 +137,18 @@ export class PaymentMethodsComponent implements OnInit {
     });
   }
 
-  deleteCard(cardId: number): void {
-    if (!confirm('Delete this card?')) return;
-    this.deletingId = cardId;
-    this.pmService.delete(cardId).subscribe({
-      next: () => { this.deletingId = null; this.successMsg = 'Card removed.'; this.load(); setTimeout(() => this.successMsg = '', 3000); },
-      error: () => { this.deletingId = null; },
-    });
+  deleteCard(cardId: number, cardNickname: string): void {
+    this.showConfirm(
+      'Delete Card',
+      `Remove "${cardNickname}" from your payment methods? This cannot be undone.`,
+      '🗑', 'Delete Card', 'danger',
+      () => {
+        this.pmService.delete(cardId).subscribe({
+          next:  () => { this.successMsg = 'Card removed.'; this.load(); setTimeout(() => this.successMsg = '', 3000); },
+          error: (err) => { this.error = err.error?.message ?? 'Failed to delete card.'; },
+        });
+      }
+    );
   }
 
   cardBrandIcon(type: string): string {
