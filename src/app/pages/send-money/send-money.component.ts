@@ -28,7 +28,7 @@ export class SendMoneyComponent implements OnInit {
     private router: Router,
   ) {
     this.form = this.fb.group({
-      recipient: ['', Validators.required],
+      receiverEmailOrPhone: ['', Validators.required],
       amount:    ['', [Validators.required, Validators.min(1)]],
       note:      [''],
       pin:       ['', [Validators.required, Validators.pattern(/^\d{4,6}$/)]],
@@ -42,8 +42,8 @@ export class SendMoneyComponent implements OnInit {
   }
 
   goToConfirm(): void {
-    if (this.form.get('recipient')?.invalid || this.form.get('amount')?.invalid) {
-      this.form.get('recipient')?.markAsTouched();
+    if (this.form.get('receiverEmailOrPhone')?.invalid || this.form.get('amount')?.invalid) {
+      this.form.get('receiverEmailOrPhone')?.markAsTouched();
       this.form.get('amount')?.markAsTouched();
       return;
     }

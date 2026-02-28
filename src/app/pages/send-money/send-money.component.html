@@ -11,9 +11,9 @@
         <div class="alert error" *ngIf="error">{{ error }}</div>
         <div class="form-group">
           <label>Send To</label>
-          <input type="text" formControlName="recipient"
-            placeholder="Email, phone, username or account ID"/>
-          <span class="field-error" *ngIf="f('recipient')?.touched && f('recipient')?.invalid">Required</span>
+          <input type="text" formControlName="receiverEmailOrPhone"
+            placeholder="Email or phone"/>
+          <span class="field-error" *ngIf="f('receiverEmailOrPhone')?.touched && f('receiverEmailOrPhone')?.invalid">Required</span>
         </div>
         <div class="form-group">
           <label>Amount (₹)</label>
