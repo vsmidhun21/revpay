@@ -38,8 +38,8 @@ export class RequestsComponent implements OnInit {
 
   loadAll(): void {
     this.loading = true;
-    this.reqService.getIncoming().subscribe({ next: (r) => { this.incoming = r.data ?? []; this.checkDone(); } });
-    this.reqService.getOutgoing().subscribe({ next: (r) => { this.outgoing = r.data ?? []; this.checkDone(); } });
+    this.reqService.getIncoming().subscribe({ next: (r) => { this.incoming = (r.data as any)?.content ?? []; this.checkDone(); } });
+    this.reqService.getOutgoing().subscribe({ next: (r) => { this.outgoing = (r.data as any)?.content ?? []; this.checkDone(); } });
   }
 
   private _loaded = 0;
