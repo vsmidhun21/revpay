@@ -30,6 +30,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/legal/terms-conditions/terms-conditions.component')
       .then(m => m.TermsConditionsComponent),
   },
+  { path: 'contact',  
+    loadComponent: () => import('./pages/legal/contact/contact.component')
+      .then(m => m.ContactComponent) 
+  },
+  { path: 'security', 
+    loadComponent: () => import('./pages/legal/security/security.component')
+      .then(m => m.SecurityComponent) 
+  },
   {
     path: 'init',
     loadComponent: () => import('./pages/profile/profile-init/profile-init.component').then(m => m.ProfileInitComponent),
