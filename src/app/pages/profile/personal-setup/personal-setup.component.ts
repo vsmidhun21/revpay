@@ -26,7 +26,7 @@ export class PersonalSetupComponent {
     private router: Router
   ) {
     this.form = this.fb.group({
-      username:          [''],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9_]+$/)]],
       dob:               ['', Validators.required],
       address:           ['', Validators.required],
       accountHolderName: ['', Validators.required],
@@ -39,8 +39,8 @@ export class PersonalSetupComponent {
   }
 
   nextStep(): void {
-    ['dob', 'address'].forEach(f => this.form.get(f)?.markAsTouched());
-    const valid = ['dob', 'address'].every(f => this.form.get(f)?.valid);
+    ['username', 'dob', 'address'].forEach(f => this.form.get(f)?.markAsTouched());
+    const valid = ['username', 'dob', 'address'].every(f => this.form.get(f)?.valid);
     if (valid) this.step = 2;
   }
 
@@ -57,7 +57,7 @@ export class PersonalSetupComponent {
     this.loading = true;
     this.errorMsg = '';
     this.userService.createPersonalProfile(this.form.value).subscribe({
-      next: () => { this.loading = false; this.router.navigate(['/dashboard']); },
+      next: () => { this.loading = false; this.router.navigate(['/setup/mpin']); },
       error: (err) => {
         this.loading = false;
         this.errorMsg = err?.error?.message || 'Something went wrong. Please try again.';

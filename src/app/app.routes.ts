@@ -53,6 +53,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/profile/business-setup/business-setup.component').then(m => m.BusinessSetupComponent),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'setup/mpin',
+    loadComponent: () => import('./pages/profile/mpin-setup/mpin-setup.component').then(m => m.MpinSetupComponent),
+    canActivate: [AuthGuard]
+  },
 
   {
     path: '',

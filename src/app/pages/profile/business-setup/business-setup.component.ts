@@ -35,6 +35,7 @@ export class BusinessSetupComponent {
     private router: Router
   ) {
     this.form = this.fb.group({
+      username:          ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9_]+$/)]],
       businessName:      ['', Validators.required],
       businessType:      ['', Validators.required],
       taxId:             ['', Validators.required],
@@ -51,7 +52,7 @@ export class BusinessSetupComponent {
   }
 
   nextStep(): void {
-    const fields = ['businessName', 'businessType', 'taxId', 'address', 'contactPhone'];
+    const fields = ['username', 'businessName', 'businessType', 'taxId', 'address', 'contactPhone'];
     fields.forEach(f => this.form.get(f)?.markAsTouched());
     if (fields.every(f => this.form.get(f)?.valid)) this.step = 2;
   }
@@ -69,7 +70,7 @@ export class BusinessSetupComponent {
     this.loading = true;
     this.errorMsg = '';
     this.userService.createBusinessProfile(this.form.value).subscribe({
-      next: () => { this.loading = false; this.router.navigate(['/dashboard']); },
+      next: () => { this.loading = false; this.router.navigate(['/setup/mpin']); },
       error: (err) => {
         this.loading = false;
         this.errorMsg = err?.error?.message || 'Something went wrong. Please try again.';

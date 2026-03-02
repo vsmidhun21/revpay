@@ -14,7 +14,10 @@
         <div class="step-item" [class.active]="step === 1" [class.done]="step > 1">
           <div class="step-dot">
             <span *ngIf="step <= 1">1</span>
-            <svg *ngIf="step > 1" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            <svg *ngIf="step > 1" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" />
+            </svg>
           </div>
           <div class="step-label">
             <strong>Personal Info</strong>
@@ -48,8 +51,14 @@
         <div *ngIf="step === 1" class="step-fields">
 
           <div class="field">
-            <label>Username <span class="optional">(optional)</span></label>
-            <input formControlName="username" type="text" placeholder="e.g. alex_johnson" />
+            <label>Username <span class="req">*</span></label>
+            <input formControlName="username" type="text" placeholder="e.g. manoj_s" [class.error]="isInvalid('username')" />
+            <span class="field-hint">Letters, numbers and underscore only. Min 3 characters.</span>
+            <span class="err-msg" *ngIf="isInvalid('username')">
+              <ng-container *ngIf="form.get('username')?.errors?.['required']">Username is required</ng-container>
+              <ng-container *ngIf="form.get('username')?.errors?.['minlength']">Minimum 3 characters</ng-container>
+              <ng-container *ngIf="form.get('username')?.errors?.['pattern']">Only letters, numbers and underscore allowed</ng-container>
+            </span>
           </div>
 
           <div class="field">
@@ -67,7 +76,11 @@
 
           <button class="btn-primary" type="button" (click)="nextStep()">
             Continue to Bank Details
-            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
           </button>
         </div>
 
@@ -112,13 +125,21 @@
           </div>
 
           <div class="error-banner" *ngIf="errorMsg">
-            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+            </svg>
             {{ errorMsg }}
           </div>
 
           <div class="btn-row">
             <button class="btn-secondary" type="button" (click)="prevStep()">
-              <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                  clip-rule="evenodd" />
+              </svg>
               Back
             </button>
             <button class="btn-primary" type="button" (click)="submit()" [disabled]="loading">

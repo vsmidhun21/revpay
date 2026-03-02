@@ -37,11 +37,10 @@ export class ProfileInitComponent implements OnInit {
           this.router.navigate(
             accountType === 'PERSONAL' ? ['/setup/personal'] : ['/setup/business']
           );
+        } else if (!localStorage.getItem('revpay_mpin_set')) {
+          this.router.navigate(['/setup/mpin']);
         } else {
-          // Pass profile in navigation state — avoids second API call
-          this.router.navigate(['/dashboard'], {
-            state: { profile: res.data }
-          });
+          this.router.navigate(['/dashboard'], { state: { profile: res.data } });
         }
       },
       error: () => this.router.navigate(['/login'])

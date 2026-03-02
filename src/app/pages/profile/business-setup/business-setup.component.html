@@ -53,10 +53,21 @@
         <!-- ── Step 1: Business Info ─────────────────────── -->
         <div *ngIf="step === 1" class="step-fields">
 
+          <div class="field">
+            <label>Username <span class="req">*</span></label>
+            <input formControlName="username" type="text" placeholder="e.g. rev_pay_corp"
+              [class.error]="isInvalid('username')" />
+            <span class="err-msg" *ngIf="isInvalid('username')">
+              <ng-container *ngIf="form.get('username')?.errors?.['required']">Username is required</ng-container>
+              <ng-container *ngIf="form.get('username')?.errors?.['minlength']">Minimum 3 characters</ng-container>
+              <ng-container *ngIf="form.get('username')?.errors?.['pattern']">Only letters, numbers and underscore allowed</ng-container>
+            </span>
+          </div>
+
           <div class="field-row">
             <div class="field">
               <label>Business Name <span class="req">*</span></label>
-              <input formControlName="businessName" type="text" placeholder="e.g. Acme Corp"
+              <input formControlName="businessName" type="text" placeholder="e.g. RevPay Corp"
                 [class.error]="isInvalid('businessName')" />
               <span class="err-msg" *ngIf="isInvalid('businessName')">Required</span>
             </div>
