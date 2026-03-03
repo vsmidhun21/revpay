@@ -60,7 +60,6 @@ export class MpinSetupComponent {
       next: () => {
         this.loading = false;
         this.success = true;
-        localStorage.setItem('revpay_mpin_set', 'true');
         setTimeout(() => this.router.navigate(['/dashboard']), 2000);
       },
       error: (err) => {

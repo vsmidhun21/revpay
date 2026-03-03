@@ -25,11 +25,25 @@
           </div>
         </div>
         <div class="step-connector" [class.done]="step > 1"></div>
-        <div class="step-item" [class.active]="step === 2">
-          <div class="step-dot">2</div>
+        <div class="step-item" [class.active]="step === 2" [class.done]="step > 2">
+          <div class="step-dot">
+            <span *ngIf="step <= 2">2</span>
+            <svg *ngIf="step > 2" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" />
+            </svg>
+          </div>
           <div class="step-label">
             <strong>Bank Details</strong>
             <small>Link your bank account</small>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item">
+          <div class="step-dot">3</div>
+          <div class="step-label">
+            <strong>Set MPIN</strong>
+            <small>Transaction security PIN</small>
           </div>
         </div>
       </div>
@@ -52,12 +66,14 @@
 
           <div class="field">
             <label>Username <span class="req">*</span></label>
-            <input formControlName="username" type="text" placeholder="e.g. manoj_s" [class.error]="isInvalid('username')" />
+            <input formControlName="username" type="text" placeholder="e.g. manoj_s"
+              [class.error]="isInvalid('username')" />
             <span class="field-hint">Letters, numbers and underscore only. Min 3 characters.</span>
             <span class="err-msg" *ngIf="isInvalid('username')">
               <ng-container *ngIf="form.get('username')?.errors?.['required']">Username is required</ng-container>
               <ng-container *ngIf="form.get('username')?.errors?.['minlength']">Minimum 3 characters</ng-container>
-              <ng-container *ngIf="form.get('username')?.errors?.['pattern']">Only letters, numbers and underscore allowed</ng-container>
+              <ng-container *ngIf="form.get('username')?.errors?.['pattern']">Only letters, numbers and underscore
+                allowed</ng-container>
             </span>
           </div>
 

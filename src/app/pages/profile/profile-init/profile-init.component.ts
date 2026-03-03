@@ -31,13 +31,17 @@ export class ProfileInitComponent implements OnInit {
     this.userService.getProfile().subscribe({
       next: (res) => {
         if (!res.data) { this.router.navigate(['/login']); return; }
-        const { profileComplete, accountType } = res.data;
+
+        const profile = res.data;
+        const profileComplete = profile.profileComplete;
+        const accountType = profile.accountType;
+        const mtpinSet = profile.mtpinSet;
 
         if (!profileComplete) {
           this.router.navigate(
             accountType === 'PERSONAL' ? ['/setup/personal'] : ['/setup/business']
           );
-        } else if (!localStorage.getItem('revpay_mpin_set')) {
+        } else if (!mtpinSet) {
           this.router.navigate(['/setup/mpin']);
         } else {
           this.router.navigate(['/dashboard'], { state: { profile: res.data } });
