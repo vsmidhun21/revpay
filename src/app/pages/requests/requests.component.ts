@@ -5,11 +5,12 @@ import { MoneyRequestService } from '../../core/services/money-request.service';
 import { MoneyRequest } from '../../core/models';
 import { FormsModule } from '@angular/forms';
 import { ConfirmModalComponent } from "../../shared/confirm-modal/confirm-modal.component";
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-requests',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ConfirmModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ConfirmModalComponent, MatIconModule],
   templateUrl: './requests.component.html',
   styleUrls: ['./requests.component.scss'],
 })
