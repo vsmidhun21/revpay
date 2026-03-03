@@ -83,7 +83,7 @@ export class RequestsComponent implements OnInit {
       this.showConfirm(
         'Decline Request',
         `Decline the ₹${req.amount.toFixed(2)} request from ${req.from?.name ?? 'user'}?`,
-        '✋', 'Decline', 'danger',
+        'highlight_off', 'Decline', 'danger',
         () => {
           this.busyId = req.requestId;
           this.reqService.decline(req.requestId).subscribe({
@@ -98,7 +98,7 @@ export class RequestsComponent implements OnInit {
     this.showConfirm(
       'Confirm Cancellation',
       `Cancel the ₹${req.amount.toFixed(2)} request to ${req.to?.name ?? 'user'}?`,
-      '🛑', 'Cancel Request', 'primary',
+      'cancel', 'Cancel Request', 'primary',
       () => { 
         this.actionLoading = req.requestId;
         this.reqService.cancel(req.requestId).subscribe({

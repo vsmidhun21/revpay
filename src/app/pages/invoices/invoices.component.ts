@@ -135,7 +135,7 @@ export class InvoicesComponent implements OnInit {
     this.showConfirm(
       'Send Invoice',
       `Send invoice to ${inv.customer?.email ?? inv.customerEmail}? They will receive a notification.`,
-      '📤', 'Send Invoice', 'primary',
+      'receipt', 'Send Invoice', 'primary',
       () => {
         this.invoiceService.send(inv.id).subscribe({
           next: () => { this.successMsg = 'Invoice sent!'; this.load(); this.loadSummary(); setTimeout(() => this.successMsg = '', 3000); },
@@ -149,7 +149,7 @@ export class InvoicesComponent implements OnInit {
     this.showConfirm(
       'Mark as Paid',
       `Mark invoice #${inv.id} as paid? This action confirms payment of ₹${inv.totalAmount.toFixed(2)}.`,
-      '✅', 'Mark as Paid', 'primary',
+      'checkbox', 'Mark as Paid', 'primary',
       () => {
         this.invoiceService.markPaid(inv.id).subscribe({
           next: () => { this.successMsg = 'Invoice marked as paid!'; this.load(); this.loadSummary(); setTimeout(() => this.successMsg = '', 3000); },
@@ -163,7 +163,7 @@ export class InvoicesComponent implements OnInit {
     this.showConfirm(
       'Cancel Invoice',
       `Cancel invoice #${inv.id}? This cannot be undone.`,
-      '🗑', 'Cancel Invoice', 'danger',
+      'delete', 'Cancel Invoice', 'danger',
       () => {
         this.invoiceService.cancel(inv.id).subscribe({
           next: () => { this.successMsg = 'Invoice cancelled.'; this.load(); this.loadSummary(); setTimeout(() => this.successMsg = '', 3000); },
