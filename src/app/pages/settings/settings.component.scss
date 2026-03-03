@@ -1116,3 +1116,22 @@ $bg:       #050810;
 .cust-email { font-size: 0.72rem; color: $muted; }
 .cust-vol { font-weight: 600; color: $text; white-space: nowrap; }
 .cust-count { font-size: 0.72rem; color: $muted; white-space: nowrap; }
+
+/* Base icon styling */
+.settings-tab mat-icon {
+  font-size: 20px;
+  margin-right: 8px;
+  // margin-top: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #94a3b8; /* muted slate tone */
+  transition: all 0.25s ease;
+}
+
+
+/* Active tab icon */
+.settings-tab.active mat-icon {
+  color: #2563eb; /* stronger blue */
+}

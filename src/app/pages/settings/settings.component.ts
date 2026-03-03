@@ -4,11 +4,12 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { ProfileService } from '../../core/services/profile.service';
 import { UserService } from '../../core/services/user.service';
 import { UserProfile } from '../../core/models';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
 })

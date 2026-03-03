@@ -14,9 +14,9 @@
   <div class="settings-layout" *ngIf="!loading">
     <!-- Sidebar tabs -->
     <div class="settings-nav">
-      <button class="settings-tab" [class.active]="activeTab==='profile'"  (click)="activeTab='profile'; error=''; successMsg=''">👤 Profile</button>
-      <button class="settings-tab" [class.active]="activeTab==='password'" (click)="activeTab='password'; error=''; successMsg=''">🔒 Password</button>
-      <button class="settings-tab" [class.active]="activeTab==='pin'"      (click)="activeTab='pin'; error=''; successMsg=''">🔢 PIN</button>
+      <button class="settings-tab" [class.active]="activeTab==='profile'"  (click)="activeTab='profile'; error=''; successMsg=''"><mat-icon>person</mat-icon> Profile</button>
+      <button class="settings-tab" [class.active]="activeTab==='password'" (click)="activeTab='password'; error=''; successMsg=''"><mat-icon>password</mat-icon> Password</button>
+      <button class="settings-tab" [class.active]="activeTab==='pin'"      (click)="activeTab='pin'; error=''; successMsg=''"><mat-icon>pin</mat-icon> PIN</button>
     </div>
 
     <!-- Profile Tab -->

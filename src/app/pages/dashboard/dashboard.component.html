@@ -39,7 +39,7 @@
       <div class="wallet-meta">
         <ng-container *ngIf="profile?.bankAccount as bank">
           <div class="meta-item">
-            <span class="meta-icon bank">🏦</span>
+            <span class="meta-icon bank"><mat-icon>account_balance</mat-icon></span>
             <div>
               <div class="meta-label">Linked Bank</div>
               <div class="meta-value">{{ bank.bankName }} ··{{ bank.accountNumber | slice:-4 }}</div>
@@ -48,7 +48,7 @@
           <div class="meta-divider"></div>
         </ng-container>
         <div class="meta-item">
-          <span class="meta-icon pending">⏳</span>
+          <span class="meta-icon pending"><mat-icon>hourglass_bottom</mat-icon></span>
           <div>
             <div class="meta-label">Pending</div>
             <!-- Live from API -->
@@ -57,7 +57,7 @@
         </div>
         <div class="meta-divider"></div>
         <div class="meta-item">
-          <span class="meta-icon success">✓</span>
+          <span class="meta-icon success"><mat-icon>check_circle</mat-icon></span>
           <div>
             <div class="meta-label">Account</div>
             <div class="meta-value">Active</div>

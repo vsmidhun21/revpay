@@ -4,11 +4,12 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } fr
 import { InvoiceService } from '../../core/services/invoice.service';
 import { Invoice, InvoiceStatus, InvoiceSummary, InvoiceLineItem } from '../../core/models';
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-invoices',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ConfirmModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmModalComponent, MatIconModule],
   templateUrl: './invoices.component.html',
   styleUrls: ['./invoices.component.scss'],
 })

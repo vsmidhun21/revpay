@@ -13,19 +13,19 @@
   <!-- Summary cards -->
   <div class="summary-grid" *ngIf="summary">
     <div class="summary-card paid">
-      <span class="sc-icon">✅</span>
+      <span class="sc-icon"><mat-icon>check_circle</mat-icon></span>
       <div class="sc-label">Paid</div>
       <div class="sc-amount">₹{{ summary.totalPaid | number:'1.2-2' }}</div>
       <div class="sc-count">{{ summary.countPaid }} invoices</div>
     </div>
     <div class="summary-card unpaid">
-      <span class="sc-icon">⏳</span>
+      <span class="sc-icon"><mat-icon>hourglass_bottom</mat-icon></span>
       <div class="sc-label">Unpaid</div>
       <div class="sc-amount">₹{{ summary.totalUnpaid | number:'1.2-2' }}</div>
       <div class="sc-count">{{ summary.countUnpaid }} invoices</div>
     </div>
     <div class="summary-card overdue">
-      <span class="sc-icon">⚠</span>
+      <span class="sc-icon"><mat-icon>warning</mat-icon></span>
       <div class="sc-label">Overdue</div>
       <div class="sc-amount">₹{{ summary.totalOverdue | number:'1.2-2' }}</div>
       <div class="sc-count">{{ summary.countOverdue }} invoices</div>
@@ -46,9 +46,9 @@
   <!-- Invoice list -->
   <div *ngIf="!loading">
     <div class="empty-state" *ngIf="invoices.length === 0">
-      <span class="empty-icon">🧾</span>
+      <span class="empty-icon"><mat-icon>receipt</mat-icon></span>
       <p>No invoices found.</p>
-      <button class="btn-primary" (click)="openCreate()">Create your first invoice</button>
+      <button class="btn-primary" (click)="openCreate()">+ Create Invoice</button>
     </div>
 
     <div class="invoice-list">
