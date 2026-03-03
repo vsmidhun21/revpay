@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { MatIconModule } from '@angular/material/icon';
 
 function passwordMatch(control: AbstractControl) {
   const pw = control.get('password')?.value;
@@ -13,7 +14,7 @@ function passwordMatch(control: AbstractControl) {
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MatIconModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
