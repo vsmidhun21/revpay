@@ -39,7 +39,7 @@
 
       <div class="notif-item" *ngFor="let n of notifications"
         [class.unread]="!n.isRead" (click)="markRead(n)">
-        <div class="notif-icon-wrap">{{ typeIcon(n.type) }}</div>
+        <div class="notif-icon-wrap"><mat-icon>{{ typeIcon(n.type) }}</mat-icon></div>
         <div class="notif-content">
           <p class="notif-message">{{ n.message }}</p>
           <span class="notif-time">{{ n.createdAt | date:'dd MMM y, h:mm a' }}</span>
@@ -63,7 +63,11 @@
 
       <div class="pref-list">
         <div class="pref-item" *ngFor="let pref of prefOptions">
-          <div class="pref-icon">{{ pref.icon }}</div>
+          <div class="pref-icon">
+            <mat-icon fontSet="material-symbols-outlined">
+              {{ pref.icon }}
+            </mat-icon>
+          </div>
           <div class="pref-info">
             <div class="pref-label">{{ pref.label }}</div>
             <div class="pref-desc">{{ pref.description }}</div>

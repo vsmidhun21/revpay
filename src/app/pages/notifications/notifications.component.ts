@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from '../../core/services/notification.service';
 import { Notification, NotificationType } from '../../core/models';
+import { MatIconModule } from '@angular/material/icon';
 
 interface NotifPref {
   key: string;
@@ -14,7 +15,7 @@ interface NotifPref {
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss'],
 })
@@ -32,13 +33,48 @@ export class NotificationsComponent implements OnInit {
   preferences: Record<string, boolean> = {};
 
   readonly prefOptions: NotifPref[] = [
-    { key: 'TRANSACTION',   label: 'Transaction Alerts',   description: 'Notify for every send, receive, top-up, and withdrawal', icon: '💸' },
-    { key: 'MONEY_REQUEST', label: 'Money Requests',       description: 'Notify when someone sends you a payment request',         icon: '📩' },
-    { key: 'CARD_CHANGE',   label: 'Card Activity',        description: 'Notify when a card is added, updated, or removed',        icon: '💳' },
-    { key: 'LOW_BALANCE',   label: 'Low Balance Alert',    description: 'Notify when wallet balance falls below ₹500',             icon: '⚠' },
-    { key: 'SECURITY',      label: 'Security Alerts',      description: 'Notify for login, password, and PIN changes',             icon: '🔒' },
-    { key: 'INVOICE',       label: 'Invoice Updates',      description: 'Notify for invoice status changes (business accounts)',   icon: '🧾' },
-    { key: 'LOAN',          label: 'Loan Reminders',       description: 'Notify for EMI due dates and loan status changes',        icon: '🏦' },
+    {
+      key: 'TRANSACTION',
+      label: 'Transaction Alerts',
+      description: 'Notify for every send, receive, top-up, and withdrawal',
+      icon: 'payments'
+    },
+    {
+      key: 'MONEY_REQUEST',
+      label: 'Money Requests',
+      description: 'Notify when someone sends you a payment request',
+      icon: 'request_page'
+    },
+    {
+      key: 'CARD_CHANGE',
+      label: 'Card Activity',
+      description: 'Notify when a card is added, updated, or removed',
+      icon: 'credit_card'
+    },
+    {
+      key: 'LOW_BALANCE',
+      label: 'Low Balance Alert',
+      description: 'Notify when wallet balance falls below ₹500',
+      icon: 'warning'
+    },
+    {
+      key: 'SECURITY',
+      label: 'Security Alerts',
+      description: 'Notify for login, password, and PIN changes',
+      icon: 'security'
+    },
+    {
+      key: 'INVOICE',
+      label: 'Invoice Updates',
+      description: 'Notify for invoice status changes (business accounts)',
+      icon: 'receipt_long'
+    },
+    {
+      key: 'LOAN',
+      label: 'Loan Reminders',
+      description: 'Notify for EMI due dates and loan status changes',
+      icon: 'account_balance'
+    },
   ];
 
   constructor(private notifService: NotificationService) {}
@@ -109,9 +145,16 @@ export class NotificationsComponent implements OnInit {
 
   typeIcon(type: NotificationType): string {
     const map: Record<NotificationType, string> = {
-      TRANSACTION: '💸', MONEY_REQUEST: '📩', CARD_CHANGE: '💳',
-      LOW_BALANCE: '⚠', SECURITY: '🔒', INVOICE: '🧾', LOAN: '🏦',
+      TRANSACTION: 'payments',
+      TRANSACTION_RECEIVED: 'payments',
+      TRANSACTION_SENT: 'payments',
+      MONEY_REQUEST: 'request_page',
+      CARD_CHANGE: 'credit_card',
+      LOW_BALANCE: 'warning',
+      SECURITY: 'lock',
+      INVOICE: 'receipt_long',
+      LOAN: 'account_balance',
     };
-    return map[type] ?? '🔔';
+    return map[type] ?? 'notifications';
   }
 }
