@@ -31,7 +31,7 @@ export class NotificationService {
     return this.http.get<ApiResponse<NotifPreferenceItem[]>>(`${this.base}/preferences`);
   }
 
-  updatePreferences(prefs: NotifPreferenceItem[]): Observable<ApiResponse<void>> {
+  updatePreferences(prefs: any): Observable<ApiResponse<void>> {
     return this.http.put<ApiResponse<void>>(`${this.base}/preferences`, prefs);
   }
 }

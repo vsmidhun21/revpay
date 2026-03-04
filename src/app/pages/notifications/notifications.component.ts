@@ -197,7 +197,11 @@ export class NotificationsComponent implements OnInit {
     this.prefsError   = '';
     this.prefsSuccess = '';
 
-    this.notifService.updatePreferences(this.rawPrefs).subscribe({
+    const payload = {
+      preferences: this.rawPrefs
+    }
+
+    this.notifService.updatePreferences(payload).subscribe({
       next: () => {
         this.prefsSaving  = false;
         this.prefsSuccess = 'Preferences saved!';
