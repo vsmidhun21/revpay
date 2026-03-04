@@ -4,6 +4,11 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse, Notification } from '../models';
 
+export interface NotifPreferenceItem {
+  notificationType: string;
+  isEnabled: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   private base = `${environment.apiBaseUrl}/notifications`;
@@ -22,11 +27,11 @@ export class NotificationService {
     return this.http.get<ApiResponse<void>>(`${this.base}/read-all`);
   }
 
-  getPreferences(): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(`${this.base}/preferences`);
+  getPreferences(): Observable<ApiResponse<NotifPreferenceItem[]>> {
+    return this.http.get<ApiResponse<NotifPreferenceItem[]>>(`${this.base}/preferences`);
   }
 
-  updatePreferences(prefs: any): Observable<ApiResponse<void>> {
+  updatePreferences(prefs: NotifPreferenceItem[]): Observable<ApiResponse<void>> {
     return this.http.put<ApiResponse<void>>(`${this.base}/preferences`, prefs);
   }
 }
