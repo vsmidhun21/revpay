@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-terms-conditions',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, MatIconModule],
   templateUrl: './terms-conditions.component.html',
   styleUrls: ['./terms-conditions.component.scss'],
 })
 export class TermsConditionsComponent {
-  lastUpdated = 'February 23, 2026';
+  lastUpdated = 'March 01, 2026';
 
   sections = [
     {

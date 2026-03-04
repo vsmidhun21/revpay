@@ -370,3 +370,40 @@ $warning: #f59e0b;
     &:hover { color: $text; }
   }
 }
+
+
+/* Legal badge icon in hero */
+.legal-badge-icon {
+  font-size: 18px;
+  margin-right: 6px;
+  vertical-align: middle;
+
+  color: #2563eb; /* fintech blue */
+
+  transition: all 0.25s ease;
+}
+
+
+/* Icons inside summary cards */
+.summary-card span mat-icon {
+  font-size: 26px;
+  transition: all 0.25s ease;
+}
+
+
+/* You Can (green check) */
+.summary-card .check {
+  color: #16a34a;
+}
+
+
+/* You Cannot (red cancel) */
+.summary-card .cancel {
+  color: #dc2626;
+}
+
+
+/* Important (blue info) */
+.summary-card .info {
+  color: #2563eb;
+}

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 interface SecurityFeature {
   icon:  string;
@@ -18,7 +19,7 @@ interface SecuritySection {
 @Component({
   selector: 'app-security',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MatIconModule],
   templateUrl: './security.component.html',
   styleUrls: ['./security.component.scss'],
 })
@@ -28,37 +29,37 @@ export class SecurityComponent {
 
   features: SecurityFeature[] = [
     {
-      icon:  '🔐',
+      icon:  'lock',
       title: 'End-to-End Encryption',
       desc:  'All data in transit is encrypted using TLS 1.3. Sensitive data at rest is encrypted with AES-256.',
       color: '#4f8ef7',
     },
     {
-      icon:  '🛡',
+      icon:  'shield',
       title: 'Transaction PIN',
       desc:  'Every payment requires a separate 4–6 digit PIN, independent of your login password.',
       color: '#22c55e',
     },
     {
-      icon:  '👁',
+      icon:  'visibility',
       title: 'Real-Time Monitoring',
       desc:  'Our systems monitor all transactions 24/7 for suspicious patterns and flag anomalies instantly.',
       color: '#a855f7',
     },
     {
-      icon:  '🔑',
+      icon:  'key',
       title: 'Secure Authentication',
       desc:  'Passwords are hashed using BCrypt. Security questions add a second layer of identity verification.',
       color: '#f59e0b',
     },
     {
-      icon:  '📋',
+      icon:  'verified_user',
       title: 'Full Audit Trail',
       desc:  'Every action on your account is logged with timestamp, IP, and device — visible to you anytime.',
       color: '#06b6d4',
     },
     {
-      icon:  '🚫',
+      icon:  'cancel',
       title: 'Role-Based Access',
       desc:  'Personal and business accounts have strictly separated permissions. No cross-account data access.',
       color: '#ef4444',

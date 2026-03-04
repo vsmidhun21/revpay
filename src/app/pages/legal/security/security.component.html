@@ -1,8 +1,24 @@
+<div class="legal-layout">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a class="logo" routerLink="/">
+        <span class="logo-mark">R</span>
+        <span class="logo-text">RevPay</span>
+      </a>
+      <div class="nav-links">
+        <a routerLink="/login" class="btn-ghost">Sign In</a>
+        <a routerLink="/register" class="btn-primary">Get Started</a>
+      </div>
+    </div>
+  </nav>
+</div>
+
 <!-- ── Hero ──────────────────────────────────────────────────── -->
 <section class="hero">
   <div class="hero-glow"></div>
   <div class="hero-inner">
-    <div class="hero-badge">🔒 Security</div>
+    <div class="hero-badge"><mat-icon>security</mat-icon> Security</div>
     <h1 class="hero-title">
       Your money is <span class="gradient-text">safe with us</span>
     </h1>
@@ -11,9 +27,9 @@
       is built on. Here's exactly how we protect your account and your funds.
     </p>
     <div class="hero-chips">
-      <span class="chip">🏦 Bank-grade encryption</span>
-      <span class="chip">🔐 AES-256 at rest</span>
-      <span class="chip">🛡 TLS 1.3 in transit</span>
+      <span class="chip"><mat-icon>account_balance</mat-icon> Bank-grade encryption</span>
+      <span class="chip"><mat-icon>lock</mat-icon> AES-256 at rest</span>
+      <span class="chip"><mat-icon>shield</mat-icon> TLS 1.3 in transit</span>
     </div>
   </div>
 </section>
@@ -28,11 +44,10 @@
       </p>
     </div>
     <div class="features-grid">
-      <div class="feature-card" *ngFor="let f of features; let i = index"
-        [style.animation-delay]="(i * 0.07) + 's'"
+      <div class="feature-card" *ngFor="let f of features; let i = index" [style.animation-delay]="(i * 0.07) + 's'"
         [style.--f-color]="f.color">
         <div class="feature-icon-wrap">
-          <span class="feature-icon">{{ f.icon }}</span>
+          <span class="feature-icon"><mat-icon>{{ f.icon }}</mat-icon></span>
         </div>
         <div class="feature-title">{{ f.title }}</div>
         <div class="feature-desc">{{ f.desc }}</div>
@@ -50,9 +65,7 @@
       <aside class="toc">
         <div class="toc-label">Contents</div>
         <nav class="toc-nav">
-          <button class="toc-link"
-            *ngFor="let sec of sections"
-            [class.active]="activeSection === sec.id"
+          <button class="toc-link" *ngFor="let sec of sections" [class.active]="activeSection === sec.id"
             (click)="scrollTo(sec.id)">
             {{ sec.heading }}
           </button>
@@ -61,7 +74,7 @@
         <div class="toc-help">
           <div class="toc-help-title">Security concern?</div>
           <a href="mailto:security@revpay.in" class="toc-help-link">
-            📧 security&#64;revpay.in
+            <mat-icon class="email-icon">email</mat-icon> security&#64;revpay.in
           </a>
         </div>
       </aside>
@@ -73,9 +86,7 @@
           This page details the technical and procedural safeguards we have in place.
         </div>
 
-        <div class="policy-section-block"
-          *ngFor="let sec of sections"
-          [id]="sec.id">
+        <div class="policy-section-block" *ngFor="let sec of sections" [id]="sec.id">
           <h2 class="policy-heading">{{ sec.heading }}</h2>
           <p class="policy-para" *ngFor="let para of sec.content">
             {{ para }}
@@ -92,7 +103,7 @@
   <div class="container">
     <div class="cta-row">
       <div class="cta-text">
-        <div class="cta-icon">🔍</div>
+        <div class="cta-icon"><mat-icon class="search-icon">search</mat-icon></div>
         <div>
           <h3 class="cta-title">Found a vulnerability?</h3>
           <p class="cta-sub">

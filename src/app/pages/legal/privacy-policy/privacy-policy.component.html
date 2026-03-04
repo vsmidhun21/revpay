@@ -8,8 +8,8 @@
         <span class="logo-text">RevPay</span>
       </a>
       <div class="nav-links">
-        <a routerLink="/terms-conditions" class="btn-ghost">Terms of Service</a>
-        <a routerLink="/login" class="btn-primary">Sign In</a>
+        <a routerLink="/login" class="btn-ghost">Sign In</a>
+        <a routerLink="/register" class="btn-primary">Get Started</a>
       </div>
     </div>
   </nav>
@@ -19,7 +19,7 @@
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="hero-content">
-      <div class="legal-badge">🔒 Legal</div>
+      <div class="legal-badge"><mat-icon class="legal-badge-icon">lock</mat-icon> Legal</div>
       <h1>Privacy Policy</h1>
       <p>How RevPay collects, uses, and protects your personal information.</p>
       <div class="last-updated">Last updated: {{ lastUpdated }}</div>
@@ -48,7 +48,7 @@
 
       <!-- Intro card -->
       <div class="intro-card">
-        <span class="intro-icon">🛡</span>
+        <span class="intro-icon"><mat-icon class="shield-icon">shield</mat-icon></span>
         <p>
           At RevPay, your privacy is fundamental to everything we do.
           This policy explains in plain language what data we collect, why we collect it,
