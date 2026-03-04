@@ -1,3 +1,19 @@
+<div class="legal-layout">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a class="logo" routerLink="/">
+        <span class="logo-mark">R</span>
+        <span class="logo-text">RevPay</span>
+      </a>
+      <div class="nav-links">
+        <a routerLink="/login" class="btn-ghost">Sign In</a>
+        <a routerLink="/register" class="btn-primary">Get Started</a>
+      </div>
+    </div>
+  </nav>
+</div>
+
 <!-- ── Hero ──────────────────────────────────────────────────── -->
 <section class="hero">
   <div class="hero-glow"></div>
@@ -18,7 +34,7 @@
       <a class="channel-card" *ngFor="let ch of channels"
         [href]="ch.link" [style.--ch-color]="ch.color">
         <div class="ch-icon-wrap">
-          <span class="ch-icon">{{ ch.icon }}</span>
+          <span class="ch-icon"><mat-icon>{{ ch.icon }}</mat-icon></span>
         </div>
         <div class="ch-body">
           <div class="ch-title">{{ ch.title }}</div>
@@ -54,7 +70,7 @@
         </div>
         <a *ngIf="member.email" [href]="'mailto:' + member.email"
           class="member-email-btn" title="Email {{ member.name }}">
-          ✉
+          <mat-icon>email</mat-icon>
         </a>
       </div>
     </div>
@@ -93,7 +109,8 @@
         Our support team typically responds within a few hours on business days.
       </p>
       <a href="mailto:support@revpay.in" class="cta-btn">
-        📧 Email Support
+        <mat-icon>email</mat-icon> 
+        Email Support
       </a>
     </div>
   </div>

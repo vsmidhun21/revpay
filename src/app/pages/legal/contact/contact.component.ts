@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 interface TeamMember {
   name:    string;
@@ -20,7 +21,7 @@ interface FaqItem {
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MatIconModule],
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss'],
 })
@@ -66,7 +67,7 @@ export class ContactComponent {
 
   channels = [
     {
-      icon:  '📧',
+      icon:  'email',
       title: 'Email Support',
       desc:  'For account or transaction issues',
       value: 'support@revpay.in',
@@ -75,7 +76,7 @@ export class ContactComponent {
       color: '#4f8ef7',
     },
     {
-      icon:  '🔒',
+      icon:  'lock',
       title: 'Security',
       desc:  'Report vulnerabilities or suspicious activity',
       value: 'security@revpay.in',
@@ -84,7 +85,7 @@ export class ContactComponent {
       color: '#22c55e',
     },
     {
-      icon:  '🏢',
+      icon:  'business',
       title: 'Business Enquiries',
       desc:  'Partnerships and enterprise solutions',
       value: 'business@revpay.in',
@@ -93,7 +94,7 @@ export class ContactComponent {
       color: '#a855f7',
     },
     {
-      icon:  '📞',
+      icon:  'phone',
       title: 'Phone Support',
       desc:  'Available Mon–Fri, 9 AM – 6 PM IST',
       value: '+91 8903909217',
