@@ -45,7 +45,7 @@
 
     <!-- Empty state -->
     <div class="empty-state" *ngIf="!loading && transactions.length === 0">
-      <span class="empty-icon">💸</span>
+      <span class="empty-icon"><mat-icon>currency_rupee</mat-icon></span>
       <p>No transactions found.</p>
       <button class="btn-outline" (click)="clearFilters()">Clear filters</button>
     </div>

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TransactionService, TransactionFilters } from '../../core/services/transaction.service';
 import { Transaction, TransactionPagination } from '../../core/models';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-transactions',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.scss'],
 })

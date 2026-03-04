@@ -90,7 +90,7 @@
 
       <!-- Empty state -->
       <div class="txn-empty" *ngIf="transactions.length === 0">
-        <span>💸</span><p>No transactions yet.</p>
+        <span><mat-icon>currency_rupee</mat-icon></span><p>No transactions yet.</p>
       </div>
 
       <div class="txn-list" *ngIf="transactions.length > 0">
